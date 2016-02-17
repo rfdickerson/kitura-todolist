@@ -4,6 +4,8 @@ import sys
 import HeliumLogger
 import LoggerAPI
 
+import Foundation
+
 ///
 /// The Kitura router
 ///
@@ -14,6 +16,29 @@ let router = Router()
 ///
 Log.logger = HeliumLogger()
 
+///
+/// Setup the database
+///
+let todos = TodoCollection()
+
+let post = TodoItem(id: 1, title: "Write Blog Post", completed: false)
+todos.add(post)
+
+let t = todos.getAll()
+
+let s: NSData
+
+do {
+
+ s = try NSJSONSerialization.dataWithJSONObject(
+  t as! [AnyObject],
+  options: NSJSONWritingOptions(rawValue: 0))
+
+  if let string = NSString(data: s, encoding: NSUTF8StringEncoding) {
+    print (string)
+  }
+
+} catch {}
 
 setupRoutes( router )
 
