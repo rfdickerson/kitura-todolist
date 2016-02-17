@@ -1,17 +1,33 @@
 import router
+import net
+
 import LoggerAPI
+import SwiftyJSON
 
 ///
 /// Sets up all the routes for the Todo List application
 ///
-func setupRoutes( router: Router) {
+func setupRoutes(router: Router, todos: TodoCollection) {
 
+    router.use("/*", middleware: BodyParser())
+    
   ///
   /// Get all the todos
   ///
   router.get("/") {
     request, response, next in
 
+    do {
+        
+        
+        //let json = JSON(todos.writeJSON())
+        
+        //try response.status(HttpStatusCode.OK).sendJson(json).end()
+        
+    } catch {
+        Log.error("Failed to send response to client")
+    }
+    
     next()
   }
 

@@ -1,8 +1,10 @@
 import router
 import net
 import sys
+
 import HeliumLogger
 import LoggerAPI
+import SwiftyJSON
 
 import Foundation
 
@@ -22,25 +24,17 @@ Log.logger = HeliumLogger()
 let todos = TodoCollection()
 
 let post = TodoItem(id: 1, title: "Write Blog Post", completed: false)
+let post2 = TodoItem(id: 2, title: "Implement JSON Serializer", completed: true)
 todos.add(post)
+todos.add(post2)
 
-let t = todos.getAll()
+//let b = JSON(todos.getAll())
+//print(b.description)
 
-let s: NSData
+let json = serialize(todos.getAll() )
+Log.info(json)
 
-do {
-
- s = try NSJSONSerialization.dataWithJSONObject(
-  t as! [AnyObject],
-  options: NSJSONWritingOptions(rawValue: 0))
-
-  if let string = NSString(data: s, encoding: NSUTF8StringEncoding) {
-    print (string)
-  }
-
-} catch {}
-
-setupRoutes( router )
+setupRoutes( router, todos: todos )
 
 ///
 /// Listen to port 8090
