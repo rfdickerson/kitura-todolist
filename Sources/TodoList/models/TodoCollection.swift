@@ -14,11 +14,6 @@
  * limitations under the License.
  **/
 
-import sys
-import LoggerAPI
-import SwiftyJSON
-
-import Foundation
 
 #if os(OSX)
     typealias JSONDictionary = [String: AnyObject]
@@ -26,84 +21,25 @@ import Foundation
     typealias JSONDictionary = [String: Any]
 #endif
 
+// TodoCollection
+//
+// TodoCollection defines the DAO for todo lists
 
-// MARK: TodoCollection
+protocol TodoCollection {
 
-class TodoCollection {
-
-    ///
-    /// Ensure in order writes to the collection
-    ///
-    static let writingQueue = Queue(type: .SERIAL, label: "Writing Queue")
+    var count: Int { get }
     
-    var idCounter: Int = 0
-    private var _collection: [TodoItem] = []
-
-    init() {}
+    func clear()
     
-    var count: Int {
-        get {
-            return _collection.count
-        }
-        set {}
-    }
+    func getAll() -> [TodoItem]
     
-    func clear() {
-
-        _collection.removeAll()
-
-    }
-
-    func getAll() -> [TodoItem]  {
-
-        return _collection
-
-    }
+    func serialize() -> [JSONDictionary]
     
-    func serialize() -> [JSONDictionary] {
-       
-        return _collection.map { $0.serialize() }
-       
-    }
-
-    func add(post: TodoItem) {
-        
-        TodoCollection.writingQueue.queueSync() {
-            
-            self._collection.append(post)
-            
-        }
-
-    }
+    func add(post: TodoItem)
     
-    func add(title: String, order: Int) -> Int {
-        
-        let newItem = TodoItem(id: count,
-            order: order,
-            title: title,
-            completed: false)
-        
-        idCounter+=1
-        
-        TodoCollection.writingQueue.queueSync() {
-            self._collection.append(newItem)
-        }
-        
-        return idCounter-1
-    }
+    func add(title: String, order: Int) -> Int
     
-    func delete(id: Int) {
-        
-        
-        
-    }
-    
-    func reorderItems() {
-        var c = 0
-        for i in 0..<_collection.count {
-            _collection[i].order = i
-        }
-    }
+    func delete(id: Int)
     
 }
 

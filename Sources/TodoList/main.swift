@@ -37,23 +37,13 @@ Log.logger = HeliumLogger()
 ///
 /// Setup the database
 ///
-let todos = TodoCollection()
+let todos: TodoCollection = TodoCollectionArray()
 
-//let post = TodoItem(id: 1, title: "Write Blog Post", completed: false)
-//let post2 = TodoItem(id: 2, title: "Implement JSON Serializer", completed: true)
-todos.add("Write blog post", order: 0)
-todos.add("Implement JSON Serialization", order: 1)
-
-//let b = JSON(todos.getAll())
-//print(b.description)
-
-//let json = JSON(todos.serialize())
-
-//do {
-//    let b = try NSJSONSerialization.data
-//}
-
-//Log.info(json.description)
+///
+/// Add some example data to the database
+///
+todos.add("Reticulate splines", order: 0)
+todos.add("Herd llamas", order: 1)
 
 setupRoutes( router, todos: todos )
 
