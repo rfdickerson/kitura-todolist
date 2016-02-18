@@ -54,14 +54,19 @@ class TodoCollectionArray: TodoCollection {
         
     }
     
-    func serialize() -> [JSONDictionary] {
+    static func serialize(items: [TodoItem]) -> [JSONDictionary] {
         
-        return _collection.map { $0.serialize() }
+        return items.map { $0.serialize() }
         
     }
     
     
     func add(title: String, order: Int) -> Int {
+        
+        if order < 0 {
+            
+            return -1
+        }
         
         let newItem = TodoItem(id: count,
             order: order,
@@ -71,7 +76,10 @@ class TodoCollectionArray: TodoCollection {
         idCounter+=1
         
         writingQueue.queueSync() {
-            self._collection.insert( order, newItem)
+            
+            let index = min(self._collection.count, order)
+          
+            self._collection.insert( newItem, atIndex: index)
         }
         
         reorderItems()
@@ -79,21 +87,16 @@ class TodoCollectionArray: TodoCollection {
         return idCounter-1
     }
     
-    ///
-    /// Delete an item based on id
-    ///
-    /// - Parameter id: unique ID for the item
-    ///
     func delete(id: Int) {
         
+        _collection = _collection.filter( {
+            $0.id != id
+            })
         
         reorderItems()
         
     }
     
-    ///
-    /// Assigns the order number to the array position
-    ///
     private func reorderItems() {
         
         for i in 0..<_collection.count {

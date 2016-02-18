@@ -56,7 +56,7 @@ protocol TodoCollection {
     ///
     /// - Returns: an array of dictionaries with todo item information
     ///
-    func serialize() -> [JSONDictionary]
+    static func serialize(items: [TodoItem]) -> [JSONDictionary]
     
     ///
     /// Add an item at a position in the list

@@ -35,7 +35,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   router.get("/") {
     request, response, next in
 
-    let json = JSON(todos.serialize())
+    let json = JSON(TodoCollectionArray.serialize(todos.getAll()))
     
     response.status(HttpStatusCode.OK).sendJson(json)
     
@@ -43,7 +43,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   }
 
   ///
-  /// Get a todo by ID
+  /// TODO:: Get a todo by ID
   ///
   router.get("/:id") {
     request, response, next in
@@ -76,7 +76,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   }
 
   ///
-  /// Mark the todo item as done
+  /// TODO: Mark the todo item as done
   ///
   router.put("/:id") {
     request, response, next in
