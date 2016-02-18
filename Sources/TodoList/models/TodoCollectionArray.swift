@@ -60,15 +60,6 @@ class TodoCollectionArray: TodoCollection {
         
     }
     
-    func add(post: TodoItem) {
-        
-        writingQueue.queueSync() {
-            
-            self._collection.append(post)
-            
-        }
-        
-    }
     
     func add(title: String, order: Int) -> Int {
         
@@ -80,8 +71,10 @@ class TodoCollectionArray: TodoCollection {
         idCounter+=1
         
         writingQueue.queueSync() {
-            self._collection.append(newItem)
+            self._collection.insert( order, newItem)
         }
+        
+        reorderItems()
         
         return idCounter-1
     }
