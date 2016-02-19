@@ -15,27 +15,32 @@
 **/
 
 struct TodoItem {
-    
+
     /// ID
     var id: Int = 0
-    
+
     // Order
     var order: Int = 0
-    
+
     /// Text to display
     var title: String = ""
-    
+
     /// Whether completed or not
     var completed: Bool = false
-    
+
     mutating func toggle() {
         completed = !completed
     }
-    
+
     mutating func changeOrder(value: Int) {
         order = value
     }
-    
+
+    ///
+    /// Transform the structure to a Dictionary
+    ///
+    /// Returns: a Dictionary populated with fields.
+    ///
     func serialize() -> JSONDictionary {
         var result = JSONDictionary()
         result["id"] = id
@@ -44,5 +49,5 @@ struct TodoItem {
         result["completed"] = completed
         return result
     }
-    
+
 }

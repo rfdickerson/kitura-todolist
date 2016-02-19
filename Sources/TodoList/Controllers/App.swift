@@ -14,8 +14,8 @@
  * limitations under the License.
  **/
 
-import router
-import net
+ import KituraRouter
+ import KituraNet
 
 import LoggerAPI
 import SwiftyJSON
@@ -28,51 +28,55 @@ import SwiftyJSON
 func setupRoutes(router: Router, todos: TodoCollection) {
 
     router.use("/*", middleware: BodyParser())
-    
-  ///
-  /// Get all the todos
-  ///
-  router.get("/") {
-    request, response, next in
 
-    let json = JSON(TodoCollectionArray.serialize(todos.getAll()))
-    
-    response.status(HttpStatusCode.OK).sendJson(json)
-    
-    next()
-  }
+    ///
+    /// Get all the todos
+    ///
+    router.get("/") {
+        request, response, next in
 
-  ///
-  /// TODO:: Get a todo by ID
-  ///
-  router.get("/:id") {
-    request, response, next in
+        let json = JSON(TodoCollectionArray.serialize(todos.getAll()))
 
-    next()
-  }
+        response.status(HttpStatusCode.OK).sendJson(json)
 
-  ///
-  /// Add a todo list item
-  ///
-  router.post("/") {
-    request, response, next in
-
-    if let body = request.body {
-        
-        if let json = body.asJson() {
-    
-            let title = json["title"].stringValue
-            let order = json["order"].intValue
-            
-            todos.add(title, order: order)
-            
-        }
-    } else {
-        Log.warning("No body")
+        next()
     }
-    
-    next()
-    
+
+    ///
+    /// TODO:: Get a todo by ID
+    ///
+    router.get("/:id") {
+        request, response, next in
+
+        next()
+    }
+
+    ///
+    /// Add a todo list item
+    ///
+    router.post("/") {
+        request, response, next in
+
+        if let body = request.body {
+
+            if let json = body.asJson() {
+
+                let title = json["title"].stringValue
+                let order = json["order"].intValue
+
+                let id = todos.add(title, order: order)
+
+                let result = JSON(["id":id])
+
+                response.status(HttpStatusCode.OK).sendJson(result)
+
+            }
+        } else {
+            Log.warning("No body")
+            response.status(HttpStatusCode.BAD_REQUEST)
+        }
+
+        next()
   }
 
   ///
@@ -80,7 +84,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   ///
   router.put("/:id") {
     request, response, next in
-    
+
     next()
   }
 
@@ -91,9 +95,9 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     request, response, next in
 
     todos.clear()
-    
+
     next()
-    
+
   }
 
   ///
@@ -101,18 +105,20 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   ///
   router.delete("/:id") {
     request, response, next in
-    
+
     if let body = request.body {
-        
+
         if let json = body.asJson() {
-            
+
             let id = json["id"].intValue
-            
+
             todos.delete(id)
-            
+            // return a response
+
         }
     } else {
         Log.warning("No body")
+        // return a response
     }
 
     next()
