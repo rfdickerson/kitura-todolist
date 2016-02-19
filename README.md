@@ -8,6 +8,7 @@ An example using Kitura to develop a Todo-Backend
 2) Build TodoList application
 
 	`swift build`
+	`make`
 	
 3) Run the TodoList application
 
