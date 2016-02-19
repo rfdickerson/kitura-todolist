@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-import sys
+import KituraSys
 import LoggerAPI
 import SwiftyJSON
 
@@ -24,85 +24,105 @@ import Foundation
 // MARK: TodoCollectionArray
 
 class TodoCollectionArray: TodoCollection {
-    
+
     ///
     /// Ensure in order writes to the collection
     ///
     let writingQueue = Queue(type: .SERIAL, label: "Writing Queue")
-    
+
+    ///
+    /// Incrementing variable used for new index values
+    ///
     var idCounter: Int = 0
+
+    ///
+    /// Internal storage of TodoItems
+    ///
     private var _collection: [TodoItem] = []
-    
+
     init() {}
-    
+
     var count: Int {
-        get {
-            return _collection.count
-        }
-        set {}
+        return _collection.count
     }
-    
+
     func clear() {
-        
-        _collection.removeAll()
-        
+
+        writingQueue.queueSync() {
+            self._collection.removeAll()
+        }
+
     }
-    
+
     func getAll() -> [TodoItem]  {
-        
+
         return _collection
-        
+
     }
-    
+
     static func serialize(items: [TodoItem]) -> [JSONDictionary] {
-        
+
         return items.map { $0.serialize() }
-        
+
     }
-    
-    
+
+
     func add(title: String, order: Int) -> Int {
-        
+
         if order < 0 {
-            
+
             return -1
         }
-        
+
         let newItem = TodoItem(id: count,
             order: order,
             title: title,
             completed: false)
-        
-        idCounter+=1
-        
-        writingQueue.queueSync() {
-            
-            let index = min(self._collection.count, order)
-          
-            self._collection.insert( newItem, atIndex: index)
-        }
-        
-        reorderItems()
-        
-        return idCounter-1
-    }
-    
-    func delete(id: Int) {
-        
-        _collection = _collection.filter( {
-            $0.id != id
-            })
-        
-        reorderItems()
-        
-    }
-    
-    private func reorderItems() {
-        
-        for i in 0..<_collection.count {
-            _collection[i].order = i
-        }
-    }
-    
-}
 
+        var original: Int
+        original = self.idCounter
+
+        writingQueue.queueSync() {
+
+            self.idCounter+=1
+
+            let index = min(self._collection.count, order)
+
+            self._collection.insert( newItem, atIndex: index)
+
+            self.reorderItems()
+            
+        }
+
+
+        return original
+
+    }
+
+    func delete(id: Int) {
+
+        writingQueue.queueSync() {
+
+            self._collection = self._collection.filter( {
+                $0.id != id
+            })
+
+            self.reorderItems()
+        }
+
+    }
+
+    ///
+    /// For every item in the list, set the order to where
+    /// it exists in the list
+    ///
+    private func reorderItems() {
+
+
+        for i in 0..<self._collection.count {
+                self._collection[i].order = i
+        }
+
+    }
+
+}
