@@ -75,5 +75,12 @@ protocol TodoCollection {
     ///
     func delete(id: Int)
     
+    ///
+    /// Toggle the item from not completed to completed and vice versa
+    ///
+    /// - Paramter id: the unique ID for the todo item 
+    ///
+    func toggle(id: Int)
+    
 }
 

@@ -14,13 +14,11 @@
  * limitations under the License.
  **/
 
- import KituraRouter
- import KituraNet
+import KituraRouter
+import KituraNet
 
 import LoggerAPI
 import SwiftyJSON
-
-
 
 ///
 /// Sets up all the routes for the Todo List application
@@ -85,7 +83,24 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   router.put("/:id") {
     request, response, next in
 
+    if let body = request.body {
+        
+        if let json = body.asJson() {
+            
+            let id = json["id"].intValue
+            
+            todos.toggle(id)
+            
+            response.status(HttpStatusCode.OK).send("")
+            
+        }
+    } else {
+        Log.warning("No body")
+        response.status(HttpStatusCode.BAD_REQUEST)
+    }
+    
     next()
+
   }
 
   ///

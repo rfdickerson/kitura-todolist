@@ -111,6 +111,21 @@ class TodoCollectionArray: TodoCollection {
         }
 
     }
+    
+    func toggle(id: Int) {
+        
+        writingQueue.queueSync() {
+            
+            for i in 0..<self._collection.count {
+                if self._collection[i].id == id {
+                    self._collection[i].toggle()
+                }
+            }
+            
+        }
+        
+    }
+
 
     ///
     /// For every item in the list, set the order to where
