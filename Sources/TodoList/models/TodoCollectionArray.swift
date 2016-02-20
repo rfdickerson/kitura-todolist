@@ -80,7 +80,7 @@ class TodoCollectionArray: TodoCollection {
             order: order,
             title: title,
             completed: false,
-            url: "/\(original)"
+            url: self.baseURL + "/" + original
         )
 
         writingQueue.queueSync() {

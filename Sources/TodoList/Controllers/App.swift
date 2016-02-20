@@ -27,13 +27,13 @@ import SwiftyJSON
 class AllRemoteOriginMiddleware: RouterMiddleware {
     func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
         
-        Log.info("Adding response header 'Access-Control-Allow-Origin: *'")
+        Log.info("Added cross origin header")
         
         response.setHeader("Access-Control-Allow-Origin", value: "*")
-        // response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
+        response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
         
-        response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
-        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT")
+        //response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
+        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
         
         
         next()
@@ -109,7 +109,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         // next()
   }
     
-    router.post("/:id") {
+    router.post("/todos/:id") {
         request, response, next in
         
         let id: String? = request.params["id"]
@@ -139,13 +139,13 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     }
 
   ///
-  /// TODO: Mark the todo item as done
+  /// TODO:
   ///
-  router.put("/:id") {
+  router.put("/todos/:id") {
     request, response, next in
 
     
-    next()
+    // next()
 
   }
 
@@ -168,7 +168,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     }
     
     do {
-        try response.send("deleted").end()
+        try response.status(HttpStatusCode.OK).end()
     } catch {
     
     
@@ -180,14 +180,25 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     ///
     /// Delete all the todo items
     ///
-    router.delete("/") {
+    router.delete("/todos/") {
         request, response, next in
         
         Log.info("Requested clearing the entire list")
         
         todos.clear()
         
-        next()
+        //next()
+        
+    }
+    
+    ///
+    ///
+    ///
+    router.all("/todos/:id") {
+        request, response, next in
+        
+        Log.info("Recieved another TODO request")
+        
         
     }
 
