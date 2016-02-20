@@ -36,13 +36,13 @@ Log.logger = HeliumLogger()
 ///
 /// Setup the database
 ///
-let todos: TodoCollection = TodoCollectionArray()
+let todos: TodoCollection = TodoCollectionArray(baseURL: "http://localhost:8080/todos")
 
 ///
 /// Add some example data to the database
 ///
-todos.add("Reticulate splines", order: 0)
-todos.add("Herd llamas", order: 1)
+todos.add("Reticulate splines", order: 0, completed: false)
+todos.add("Herd llamas", order: 1, completed: false)
 
 setupRoutes( router, todos: todos )
 

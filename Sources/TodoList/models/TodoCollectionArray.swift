@@ -25,6 +25,8 @@ import Foundation
 
 class TodoCollectionArray: TodoCollection {
 
+    var baseURL: String
+    
     ///
     /// Ensure in order writes to the collection
     ///
@@ -36,14 +38,16 @@ class TodoCollectionArray: TodoCollection {
     var idCounter: Int = 0
 
     ///
-    /// Internal storage of TodoItems
+    /// Internal storage of TodoItems as a Dictionary
     ///
-    private var _collection: [TodoItem] = []
-
-    init() {}
+    private var _collection = [String: TodoItem]()
+    
+    init(baseURL: String) {
+        self.baseURL = baseURL
+    }
 
     var count: Int {
-        return _collection.count
+        return _collection.keys.count
     }
 
     func clear() {
@@ -56,7 +60,7 @@ class TodoCollectionArray: TodoCollection {
 
     func getAll() -> [TodoItem]  {
 
-        return _collection
+        return [TodoItem](_collection.values)
 
     }
 
@@ -67,78 +71,72 @@ class TodoCollectionArray: TodoCollection {
     }
 
 
-    func add(title: String, order: Int) -> Int {
+    func add(title: String, order: Int, completed: Bool) -> TodoItem {
 
-        if order < 0 {
-
-            return -1
-        }
-
-        let newItem = TodoItem(id: count,
+        var original: String
+        original = String(self.idCounter)
+        
+        let newItem = TodoItem(id: original,
             order: order,
             title: title,
-            completed: false)
-
-        var original: Int
-        original = self.idCounter
+            completed: false,
+            url: "/\(original)"
+        )
 
         writingQueue.queueSync() {
 
             self.idCounter+=1
 
-            let index = min(self._collection.count, order)
+            self._collection[original] = newItem
 
-            self._collection.insert( newItem, atIndex: index)
-
-            self.reorderItems()
-            
         }
 
         Log.info("Added \(title)")
 
-        return original
+        return newItem
 
     }
+    
+    /// 
+    /// Update an element by id
+    ///
+    /// - Parameter id: id for the element
+    /// - 
+    func update(id: String, title: String?, order: Int?, completed: Bool?) -> TodoItem? {
+        
+        // search for element
+        
+        let oldValue = _collection[id]
+        
+        if let oldValue = oldValue {
+            
+            // use nil coalescing operator
+            
+            let newValue = TodoItem( id: id,
+                order: order ?? oldValue.order,
+                title: title ?? oldValue.title,
+                completed: completed ?? oldValue.completed,
+                url: oldValue.url
+            )
+            
+            _collection.updateValue(newValue, forKey: id)
+            
+            return newValue
+            
+        } else {
+            Log.warning("Could not find item in database with ID: \(id)")
+        }
+        
+        return nil
+    }
 
-    func delete(id: Int) {
+    func delete(id: String) {
 
         writingQueue.queueSync() {
 
-            self._collection = self._collection.filter( {
-                $0.id != id
-            })
-
-            self.reorderItems()
+            self._collection.removeValueForKey(id)
         }
 
     }
     
-    func toggle(id: Int) {
-        
-        writingQueue.queueSync() {
-            
-            for i in 0..<self._collection.count {
-                if self._collection[i].id == id {
-                    self._collection[i].toggle()
-                }
-            }
-            
-        }
-        
-    }
-
-
-    ///
-    /// For every item in the list, set the order to where
-    /// it exists in the list
-    ///
-    private func reorderItems() {
-
-
-        for i in 0..<self._collection.count {
-                self._collection[i].order = i
-        }
-
-    }
-
 }

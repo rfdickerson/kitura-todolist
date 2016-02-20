@@ -20,14 +20,21 @@ import KituraNet
 import LoggerAPI
 import SwiftyJSON
 
-
+///
+/// Custom middleware that allows Cross Origin HTTP requests
+/// This will allow wwww.todobackend.com to communicate with your server
+///
 class AllRemoteOriginMiddleware: RouterMiddleware {
     func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
         
         Log.info("Adding response header 'Access-Control-Allow-Origin: *'")
         
         response.setHeader("Access-Control-Allow-Origin", value: "*")
-        response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
+        // response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
+        
+        response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
+        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT")
+        
         
         next()
     }
@@ -42,6 +49,13 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     
     router.use("/*", middleware: AllRemoteOriginMiddleware())
 
+    
+    router.all("/") {
+        _, _, next in
+        
+        next()
+    }
+        
     ///
     /// Get all the todos
     ///
@@ -55,6 +69,8 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         next()
     }
 
+   
+    
     ///
     /// TODO:: Get a todo by ID
     ///
@@ -76,10 +92,11 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
                 let title = json["title"].stringValue
                 let order = json["order"].intValue
+                let completed = json["completed"].boolValue
 
-                let id = todos.add(title, order: order)
+                let newItem = todos.add(title, order: order, completed: completed)
 
-                let result = JSON(["id":id])
+                let result = JSON(newItem.serialize())
 
                 response.status(HttpStatusCode.OK).sendJson(result)
 
@@ -89,8 +106,37 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             response.status(HttpStatusCode.BAD_REQUEST)
         }
 
-        next()
+        // next()
   }
+    
+    router.post("/:id") {
+        request, response, next in
+        
+        let id: String? = request.params["id"]
+        
+        if let body = request.body {
+            
+            if let json = body.asJson() {
+                
+                let title = json["title"].stringValue
+                let order = json["order"].intValue
+                let completed = json["completed"].boolValue
+                
+                let newItem = todos.update(id!, title: title, order: order, completed: completed)
+                
+                let result = JSON(newItem!.serialize())
+                
+                response.status(HttpStatusCode.OK).sendJson(result)
+                
+            }
+        } else {
+            Log.warning("No body")
+            response.status(HttpStatusCode.BAD_REQUEST)
+        }
+
+        
+        
+    }
 
   ///
   /// TODO: Mark the todo item as done
@@ -98,61 +144,51 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   router.put("/:id") {
     request, response, next in
 
-    if let body = request.body {
-        
-        if let json = body.asJson() {
-            
-            let id = json["id"].intValue
-            
-            todos.toggle(id)
-            
-            response.status(HttpStatusCode.OK).send("")
-            
-        }
-    } else {
-        Log.warning("No body")
-        response.status(HttpStatusCode.BAD_REQUEST)
-    }
     
     next()
 
   }
 
-  ///
-  /// Delete all the todo items
-  ///
-  router.delete("/") {
-    request, response, next in
-
-    todos.clear()
-
-    next()
-
-  }
+  
 
   ///
   /// Delete an individual todo item
   ///
-  router.delete("/:id") {
+  router.delete("/todos/:id") {
     request, response, next in
-
-    if let body = request.body {
-
-        if let json = body.asJson() {
-
-            let id = json["id"].intValue
-
-            todos.delete(id)
-            // return a response
-
-        }
+    
+    Log.info("Requesting a delete")
+    
+    let id: String? = request.params["id"]
+    
+    if let id = id {
+        todos.delete(id)
     } else {
-        Log.warning("No body")
-        // return a response
+        Log.warning("Could not parse ID")
     }
-
-    next()
+    
+    do {
+        try response.send("deleted").end()
+    } catch {
+    
+    
+    }
+    // next()
 
   }
+    
+    ///
+    /// Delete all the todo items
+    ///
+    router.delete("/") {
+        request, response, next in
+        
+        Log.info("Requested clearing the entire list")
+        
+        todos.clear()
+        
+        next()
+        
+    }
 
 }

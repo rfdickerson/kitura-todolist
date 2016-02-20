@@ -17,7 +17,7 @@
 struct TodoItem {
 
     /// ID
-    var id: Int = 0
+    var id: String = ""
 
     // Order
     var order: Int = 0
@@ -28,13 +28,10 @@ struct TodoItem {
     /// Whether completed or not
     var completed: Bool = false
 
-    mutating func toggle() {
-        completed = !completed
-    }
-
-    mutating func changeOrder(value: Int) {
-        order = value
-    }
+    /// Full path URL to the resource
+    /// ex. http://localhost:8090/todos/508
+    ///
+    var url: String = ""
 
     ///
     /// Transform the structure to a Dictionary
@@ -47,6 +44,7 @@ struct TodoItem {
         result["order"] = order
         result["title"] = title
         result["completed"] = completed
+        result["url"] = url
         return result
     }
 
