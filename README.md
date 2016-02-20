@@ -1,5 +1,6 @@
 # Kitura-TodoList
-An example using Kitura to develop a Todo-Backend
+
+*An example using Kitura to develop the backend for a todo list organizer*
 
 ## Installation
 
@@ -16,6 +17,10 @@ An example using Kitura to develop a Todo-Backend
 	
 	
 ## Usage
+
+Open up your browser, and view: 
+
+   [http://www.todobackend.com/client/index.html?http://localhost:8090](http://www.todobackend.com/client/index.html?http://localhost:8090)
 
 To add todo items manually through a POST request, you can run
 
