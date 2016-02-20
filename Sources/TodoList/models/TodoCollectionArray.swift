@@ -94,6 +94,7 @@ class TodoCollectionArray: TodoCollection {
             
         }
 
+        Log.info("Added \(title)")
 
         return original
 

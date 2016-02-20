@@ -20,12 +20,27 @@ import KituraNet
 import LoggerAPI
 import SwiftyJSON
 
+
+class AllRemoteOriginMiddleware: RouterMiddleware {
+    func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
+        
+        Log.info("Adding response header 'Access-Control-Allow-Origin: *'")
+        
+        response.setHeader("Access-Control-Allow-Origin", value: "*")
+        response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
+        
+        next()
+    }
+}
+
 ///
 /// Sets up all the routes for the Todo List application
 ///
 func setupRoutes(router: Router, todos: TodoCollection) {
 
     router.use("/*", middleware: BodyParser())
+    
+    router.use("/*", middleware: AllRemoteOriginMiddleware())
 
     ///
     /// Get all the todos
