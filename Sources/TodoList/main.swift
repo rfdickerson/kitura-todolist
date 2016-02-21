@@ -36,7 +36,7 @@ Log.logger = HeliumLogger()
 ///
 /// Setup the database
 ///
-let todos: TodoCollection = TodoCollectionArray(baseURL: "http://localhost:8080/todos")
+let todos: TodoCollection = TodoCollectionArray(baseURL: "http://localhost:8090/todos")
 
 ///
 /// Add some example data to the database

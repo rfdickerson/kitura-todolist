@@ -30,10 +30,10 @@ class AllRemoteOriginMiddleware: RouterMiddleware {
         Log.info("Added cross origin header")
         
         response.setHeader("Access-Control-Allow-Origin", value: "*")
-        response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
+        //response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
         
-        //response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
-        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
+        response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
+        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT")
         
         
         next()
@@ -194,12 +194,12 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     ///
     ///
     ///
-    router.all("/todos/:id") {
-        request, response, next in
-        
-        Log.info("Recieved another TODO request")
-        
-        
-    }
+    //router.all("/todos/:id") {
+    //    request, response, next in
+    //
+    //    Log.info("Recieved another TODO request")
+    //
+    //
+    //}
 
 }
