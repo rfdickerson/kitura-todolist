@@ -1,6 +1,6 @@
 # Kitura-TodoList
 
-*An example using Kitura to develop the backend for a todo list organizer*
+*An example using the Kitura web framework and HTTP Server to develop a backend for a todo list organizer*
 
 ## Installation
 
@@ -22,6 +22,6 @@ Open up your browser, and view:
 
    [http://www.todobackend.com/client/index.html?http://localhost:8090](http://www.todobackend.com/client/index.html?http://localhost:8090)
 
-To add todo items manually through a POST request, you can run
+## License 
 
-	curl -H "Content-Type: application/json" -X POST -d '{"title":"Win the Nobel Prize", "order": 0}' http://localhost:8090
+This library is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
