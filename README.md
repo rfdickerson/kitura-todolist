@@ -2,6 +2,10 @@
 
 *An example using the Kitura web framework and HTTP Server to develop a backend for a todo list organizer*
 
+## Tutorial
+
+This project accompanies the tutorial on [IBM Developer Works](https://developer.ibm.com/swift/2016/02/22/building-end-end-cloud-apps-using-swift-kitura/)
+
 ## Installation
 
 1) Install [Kitura](https://github.com/IBM-Swift/Kitura)
