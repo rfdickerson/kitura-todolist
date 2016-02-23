@@ -4,7 +4,7 @@
 
 ## Tutorial
 
-This project accompanies the tutorial on [IBM Developer Works](https://developer.ibm.com/swift/2016/02/22/building-end-end-cloud-apps-using-swift-kitura/)
+This project accompanies the tutorial on IBM Developer Works: [Build End-to-End Cloud Apps using Swift with Kitura](https://developer.ibm.com/swift/2016/02/22/building-end-end-cloud-apps-using-swift-kitura/)
 
 ## Installation
 
