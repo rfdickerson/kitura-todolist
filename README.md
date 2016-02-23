@@ -1,4 +1,4 @@
-# Kitura-TodoList
+# Kitura To-do List Backend
 
 *An example using the Kitura web framework and HTTP Server to develop a backend for a todo list organizer*
 
