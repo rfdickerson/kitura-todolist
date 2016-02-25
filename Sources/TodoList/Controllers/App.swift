@@ -32,10 +32,6 @@ class AllRemoteOriginMiddleware: RouterMiddleware {
         response.setHeader("Access-Control-Allow-Origin", value: "*")
         //response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
         
-        response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
-        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT")
-        
-        
         next()
     }
 }
@@ -69,17 +65,20 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         next()
     }
 
-   
-    
     ///
-    /// TODO:: Get a todo by ID
+    /// Handle options
     ///
-    router.get("/:id") {
+    router.options("/todos/:id") {
         request, response, next in
-
+        
+        response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
+        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
+        
+        response.status(HttpStatusCode.OK)
+        
         next()
     }
-
+    
     ///
     /// Add a todo list item
     ///
@@ -141,11 +140,30 @@ func setupRoutes(router: Router, todos: TodoCollection) {
   ///
   /// TODO:
   ///
-  router.put("/todos/:id") {
+  router.patch("/todos/:id") {
     request, response, next in
 
+    let id: String? = request.params["id"]
     
-    // next()
+    if let id = id {
+        
+        if let body = request.body {
+            
+            if let json = body.asJson() {
+                
+                let completed = json["completed"].boolValue
+                
+                todos.update(id, title: nil, order: nil, completed: completed)
+                
+                response.status(HttpStatusCode.OK)
+
+            }
+        } else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+        }
+    }
+    
+    next()
 
   }
 
