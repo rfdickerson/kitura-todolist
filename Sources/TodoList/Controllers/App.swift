@@ -68,7 +68,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     ///
     /// Handle options
     ///
-    router.options("/todos/:id") {
+    router.options("/*") {
         request, response, next in
         
         response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
