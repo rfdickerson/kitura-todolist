@@ -8,23 +8,43 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
 ## Installation
 
-1) Install [Kitura](https://github.com/IBM-Swift/Kitura)
+1. Install the [latest Swift binaries](https://swift.org/download/) (at least as recent as the Feb 25, 2016 snapshot)
 
-2) Build TodoList application
+2. Install Kitura dependencies:
 
-	`swift build`
-	`make`
+  1. Mac OS X: 
+  
+    `brew install http-parser pcre2 curl hiredis`
+  
+  
+  2. Linux (Ubuntu 15.10):
+   
+    `sudo apt-get install libhttp-parser-dev libcurl4-openssl-dev libhiredis-dev`
+
+3. Build TodoList application
+
+  1. Mac OS X: 
 	
-3) Run the TodoList application
-
-	`./.build/debug/TodoList'
+	`swift build -Xcc -fblocks -Xswiftc -I/usr/local/include -Xlinker -L/usr/local/lib`
 	
+  2. Linux:
+  
+    `swift build -Xcc -fblocks`
 	
-## Usage
+4. Run the TodoList application:
 
-Open up your browser, and view: 
+	`./.build/debug/TodoList`
+	
+5. Open up your browser, and view: 
 
    [http://www.todobackend.com/client/index.html?http://localhost:8090](http://www.todobackend.com/client/index.html?http://localhost:8090)
+
+
+## Tests
+
+  To run unit tests, run:
+  
+  `swift test`
 
 ## License 
 
