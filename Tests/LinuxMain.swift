@@ -14,10 +14,10 @@
  * limitations under the License.
  **/
 
- import XCTest
- @testable TodoList
+import XCTest
 
- XCTMain([
- 	TodoCollectionTests()
- ])
- 
+@testable import TodoListtest
+
+XCTMain([
+         TodoCollectionTests()
+         ])
