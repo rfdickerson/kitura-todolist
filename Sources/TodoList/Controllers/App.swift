@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-import KituraRouter
+import Kitura
 import KituraNet
 
 import LoggerAPI
@@ -41,9 +41,9 @@ class AllRemoteOriginMiddleware: RouterMiddleware {
 ///
 func setupRoutes(router: Router, todos: TodoCollection) {
 
-    router.use("/*", middleware: BodyParser())
+    router.all("/*", middleware: BodyParser())
     
-    router.use("/*", middleware: AllRemoteOriginMiddleware())
+    router.all("/*", middleware: AllRemoteOriginMiddleware())
 
     
     router.all("/") {
