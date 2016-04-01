@@ -63,6 +63,11 @@ class TodoCollectionArray: TodoCollection {
         return [TodoItem](_collection.values)
 
     }
+    
+    func get(id: String) -> TodoItem? {
+        
+        return _collection[id]
+    }
 
     static func serialize(items: [TodoItem]) -> [JSONDictionary] {
 
@@ -138,5 +143,7 @@ class TodoCollectionArray: TodoCollection {
         }
 
     }
+
+    
     
 }

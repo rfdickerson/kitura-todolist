@@ -36,6 +36,8 @@ protocol TodoCollection {
     func clear()
  
     func getAll() -> [TodoItem]
+    
+    func get(id: String) -> TodoItem?
  
     static func serialize(items: [TodoItem]) -> [JSONDictionary]
 
@@ -44,6 +46,7 @@ protocol TodoCollection {
     func update(id: String, title: String?, order: Int?, completed: Bool?) -> TodoItem?
 
     func delete(id: String)
+    
     
 }
 
