@@ -126,9 +126,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "______Target_LoggerSample"
-               BuildableName = "LoggerSample"
-               BlueprintName = "LoggerSample"
+               BlueprintIdentifier = "______Target_CFEnvironment"
+               BuildableName = "libCFEnvironment.dylib"
+               BlueprintName = "CFEnvironment"
                ReferencedContainer = "container:TodoList.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -171,6 +171,16 @@
                BlueprintIdentifier = "______Target_netTestSuite"
                BuildableName = "net.testsuite.xctest"
                BlueprintName = "net.testsuite"
+               ReferencedContainer = "container:TodoList.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_CFEnvironmentTestSuite"
+               BuildableName = "CFEnvironment.testsuite.xctest"
+               BlueprintName = "CFEnvironment.testsuite"
                ReferencedContainer = "container:TodoList.xcodeproj">
             </BuildableReference>
          </TestableReference>
