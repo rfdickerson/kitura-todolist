@@ -22,6 +22,7 @@ import HeliumLogger
 import LoggerAPI
 
 import Foundation
+import CFEnvironment
 
 ///
 /// The Kitura router
@@ -49,6 +50,19 @@ setupRoutes( router, todos: todos )
 ///
 /// Listen to port 8090
 ///
-let server = HttpServer.listen(8090, delegate: router)
+do {
+  let appEnv = try CFEnvironment.getAppEnv()
+  // Let's use the given port and binding host to create a socket for our server...
+  let ip: String = appEnv.bind
+  let port: Int = appEnv.port
 
-Server.run()
+  let server = HttpServer.listen(port, delegate: router)
+
+  Server.run()
+
+  // Once the server starts, print the url value
+  print("Server is starting on \(appEnv.url).")
+
+} catch CFEnvironmentError.InvalidValue {
+  print("Oops, something went wrong... Server did not start!")
+}
