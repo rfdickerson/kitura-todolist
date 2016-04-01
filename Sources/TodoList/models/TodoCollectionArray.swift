@@ -50,23 +50,28 @@ class TodoCollectionArray: TodoCollection {
         return _collection.keys.count
     }
 
-    func clear() {
+    func clear( oncompletion: (Void) -> Void) {
 
         writingQueue.queueSync() {
             self._collection.removeAll()
+            oncompletion()
         }
 
     }
 
-    func getAll() -> [TodoItem]  {
+    func getAll( oncompletion: ([TodoItem]) -> Void ) {
 
-        return [TodoItem](_collection.values)
+        writingQueue.queueSync() {
+            oncompletion( [TodoItem](self._collection.values) )
+        }
 
     }
     
-    func get(id: String) -> TodoItem? {
-        
-        return _collection[id]
+    func get(id: String, oncompletion: (TodoItem?) -> Void ) {
+    
+        writingQueue.queueSync() {
+            oncompletion(self._collection[id])
+        }
     }
 
     static func serialize(items: [TodoItem]) -> [JSONDictionary] {
@@ -76,7 +81,7 @@ class TodoCollectionArray: TodoCollection {
     }
 
 
-    func add(title: String, order: Int, completed: Bool) -> TodoItem {
+    func add(title: String, order: Int, completed: Bool, oncompletion: (TodoItem) -> Void ) {
 
         var original: String
         original = String(self.idCounter)
@@ -93,13 +98,14 @@ class TodoCollectionArray: TodoCollection {
             self.idCounter+=1
 
             self._collection[original] = newItem
+    
+            Log.info("Added \(title)")
+    
+            oncompletion(newItem)
 
         }
 
-        Log.info("Added \(title)")
-
-        return newItem
-
+    
     }
     
     /// 
@@ -107,7 +113,7 @@ class TodoCollectionArray: TodoCollection {
     ///
     /// - Parameter id: id for the element
     /// - 
-    func update(id: String, title: String?, order: Int?, completed: Bool?) -> TodoItem? {
+    func update(id: String, title: String?, order: Int?, completed: Bool?, oncompletion: (TodoItem?) -> Void ) {
         
         // search for element
         
@@ -124,22 +130,26 @@ class TodoCollectionArray: TodoCollection {
                 url: oldValue.url
             )
             
-            _collection.updateValue(newValue, forKey: id)
+            writingQueue.queueSync() {
+                
+                self._collection.updateValue(newValue, forKey: id)
             
-            return newValue
+                oncompletion( newValue )
+            }
             
         } else {
             Log.warning("Could not find item in database with ID: \(id)")
         }
         
-        return nil
+        
     }
 
-    func delete(id: String) {
+    func delete(id: String, oncompletion: (Void) -> Void) {
 
         writingQueue.queueSync() {
 
             self._collection.removeValueForKey(id)
+            oncompletion()
         }
 
     }

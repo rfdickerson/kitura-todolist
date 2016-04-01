@@ -20,54 +20,54 @@ import KituraNet
 import LoggerAPI
 import SwiftyJSON
 
-///
-/// Custom middleware that allows Cross Origin HTTP requests
-/// This will allow wwww.todobackend.com to communicate with your server
-///
+/**
+ Custom middleware that allows Cross Origin HTTP requests
+ This will allow wwww.todobackend.com to communicate with your server
+*/
 class AllRemoteOriginMiddleware: RouterMiddleware {
     func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
 
-        // Log.info("Added cross origin header")
-
         response.setHeader("Access-Control-Allow-Origin", value: "*")
-        //response.setHeader("Access-Control-Allow-Headers", value: "Origin, X-Requested-With, Content-Type, Accept")
-
+    
         next()
     }
 }
 
-///
-/// Sets up all the routes for the Todo List application
-///
+/**
+ Sets up all the routes for the Todo List application
+*/
 func setupRoutes(router: Router, todos: TodoCollection) {
 
     router.all("/*", middleware: BodyParser())
 
     router.all("/*", middleware: AllRemoteOriginMiddleware())
 
-
-    // router.all("/") {
-    //    _, _, next in
-    //
-    //    next()
-    // }
-
-    ///
-    /// Get all the todos
-    ///
+    /**
+        Get all the todos
+    */
     router.get("/") {
         request, response, next in
-
-        let json = JSON(TodoCollectionArray.serialize(todos.getAll()))
-
-        response.status(HttpStatusCode.OK).sendJson(json)
-
-        next()
+        
+        todos.getAll() {
+            todos in
+            
+            let json = JSON(TodoCollectionArray.serialize(todos))
+            do {
+                try response.status(HttpStatusCode.OK).sendJson(json).end()
+            } catch {
+                
+            }
+            
+        }
+        
     }
     
+    /**
+     Get information about a todo item by ID
+     */
     router.get("/todos/:id") {
         request, response, next in
-
+        
         let id: String? = request.params["id"]
         
         guard id != nil else {
@@ -75,187 +75,205 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             return
         }
         
-        let item = todos.get(id!)
-        
-        if let item = item {
+        todos.get(id!) {
             
-            let result = JSON(item.serialize())
+            item in
             
-            do {
-                try response.status(HttpStatusCode.OK).sendJson(result).end()
-            } catch {}
+            if let item = item {
+                
+                let result = JSON(item.serialize())
+                
+                do {
+                    try response.status(HttpStatusCode.OK).sendJson(result).end()
+                } catch {
+                    
+                }
+            }
             
         }
         
     }
-
-    ///
-    /// Handle options
-    ///
+    
+    /**
+     Handle options
+     */
     router.options("/*") {
         request, response, next in
-
+        
         response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
         response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
-
+        
         response.status(HttpStatusCode.OK)
-
+        
         next()
     }
-
-    ///
-    /// Add a todo list item
-    ///
+    
+    /**
+     Add a todo list item
+     */
     router.post("/") {
         request, response, next in
-
-        if let body = request.body {
-
-            if let json = body.asJson() {
-
-                let title = json["title"].stringValue
-                let order = json["order"].intValue ?? 0
-                let completed = json["completed"].boolValue ?? false
-
-                Log.info("Received \(title)")
-
-                let newItem = todos.add(title, order: order, completed: completed)
-
-                let result = JSON(newItem.serialize())
         
-                do  {
-                    try response.status(HttpStatusCode.OK).sendJson(result).end()
-                } catch {}
-
-               
-
-            }
-        } else {
-            Log.warning("No body")
+        guard request.body != nil else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            return
         }
-
-        // next()
-  }
-
+        
+        let body = request.body!
+        
+        guard body.asJson() != nil else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            return
+        }
+        
+        let json = body.asJson()!
+        
+        let title = json["title"].stringValue
+        let order = json["order"].intValue
+        let completed = json["completed"].boolValue
+        
+        Log.info("Received \(title)")
+        
+        todos.add(title, order: order, completed: completed) {
+            
+            newItem in
+            
+            let result = JSON(newItem.serialize())
+            
+            do  {
+                try response.status(HttpStatusCode.OK).sendJson(result).end()
+            } catch {
+                Log.error("Something went wrong")
+            }
+            
+        }
+    }
+    
     router.post("/todos/:id") {
         request, response, next in
-
+        
         let id: String? = request.params["id"]
-
-        if let body = request.body {
-
-            if let json = body.asJson() {
-
-                let title = json["title"].stringValue
-                let order = json["order"].intValue
-                let completed = json["completed"].boolValue
-
-                let newItem = todos.update(id!, title: title, order: order, completed: completed)
-
-                let result = JSON(newItem!.serialize())
-
-                response.status(HttpStatusCode.OK).sendJson(result)
-
-            }
-        } else {
+        
+        guard request.body != nil else {
             Log.warning("No body")
             response.status(HttpStatusCode.BAD_REQUEST)
+            return
         }
-
-
-
-    }
-
-  ///
-  /// TODO:
-  ///
-  router.patch("/todos/:id") {
-    request, response, next in
-
-    let id: String? = request.params["id"]
-
-    if let id = id {
-
-        if let body = request.body {
-
-            if let json = body.asJson() {
-
-                let title = json["title"].stringValue
-                let order = json["order"].intValue
-                let completed = json["completed"].boolValue
-
-                let newItem = todos.update(id, title: title, order: order, completed: completed)
-
-                let result = JSON(newItem!.serialize())
-                
-                response.status(HttpStatusCode.OK).sendJson(result)
-
-            }
-        } else {
+        
+        guard request.body!.asJson() != nil else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            return
+        }
+        
+        let json = request.body!.asJson()!
+        
+        let title = json["title"].stringValue
+        let order = json["order"].intValue
+        let completed = json["completed"].boolValue
+        
+        todos.update(id!, title: title, order: order, completed: completed) {
+            
+            newItem in
+            
+            let result = JSON(newItem!.serialize())
+            
+            response.status(HttpStatusCode.OK).sendJson(result)
+            
+        }
+        
+    }
+    
+    /**
+     Patch or update an existing Todo item
+     */
+    router.patch("/todos/:id") {
+        request, response, next in
+        
+        let id: String? = request.params["id"]
+        
+        guard id != nil else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            return
+        }
+        
+        guard request.body != nil else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            return
+        }
+        
+        let body = request.body!
+        
+        if let json = body.asJson() {
+            
+            let title = json["title"].stringValue
+            let order = json["order"].intValue
+            let completed = json["completed"].boolValue
+            
+            todos.update(id!, title: title, order: order, completed: completed) {
+                
+                newItem in
+                
+                if let newItem = newItem {
+                    
+                    let result = JSON(newItem.serialize())
+                    
+                    do {
+                        try response.status(HttpStatusCode.OK).sendJson(result).end()
+                    } catch {}
+                }
+                
+            }
+            
         }
     }
-
-    next()
-
-  }
-
-
-
-  ///
-  /// Delete an individual todo item
-  ///
-  router.delete("/todos/:id") {
-    request, response, next in
-
-    Log.info("Requesting a delete")
-
-    let id: String? = request.params["id"]
-
-    if let id = id {
-        todos.delete(id)
-    } else {
-        Log.warning("Could not parse ID")
-    }
-
-    do {
-        try response.status(HttpStatusCode.OK).end()
-    } catch {
-
-
-    }
-    // next()
-
-  }
-
+    
     ///
-    /// Delete all the todo items
+    /// Delete an individual todo item
     ///
+    router.delete("/todos/:id") {
+        request, response, next in
+        
+        Log.info("Requesting a delete")
+        
+        let id: String? = request.params["id"]
+        
+        guard id != nil else {
+            Log.warning("Could not parse ID")
+            response.status(HttpStatusCode.BAD_REQUEST)
+            return
+        }
+        
+        
+        todos.delete(id!) {
+            
+            do {
+                try response.status(HttpStatusCode.OK).end()
+            } catch {
+                Log.error("Could not produce response")
+            }
+            
+        }
+        
+    }
+    
+    /**
+     Delete all the todo items
+     */
     router.delete("/") {
         request, response, next in
-
+        
         Log.info("Requested clearing the entire list")
-
-        todos.clear()
-
-        do {
-            try response.status(HttpStatusCode.OK).end()
-        } catch { }
-
-        //next()
-
+        
+        todos.clear() {
+            do {
+                try response.status(HttpStatusCode.OK).end()
+            } catch {
+                Log.error("Could not produce response")
+            }
+        }
+        
+        
     }
-
-    ///
-    ///
-    ///
-    //router.all("/todos/:id") {
-    //    request, response, next in
-    //
-    //    Log.info("Recieved another TODO request")
-    //
-    //
-    //}
-
-}
+    
+    
+} // end of SetupRoutes()
