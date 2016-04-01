@@ -42,8 +42,8 @@ let todos: TodoCollection = TodoCollectionArray(baseURL: "http://localhost:8090/
 ///
 /// Add some example data to the database
 ///
-todos.add("Reticulate splines", order: 0, completed: false)
-todos.add("Herd llamas", order: 1, completed: false)
+// todos.add("Reticulate splines", order: 0, completed: false)
+// todos.add("Herd llamas", order: 1, completed: false)
 
 setupRoutes( router, todos: todos )
 
