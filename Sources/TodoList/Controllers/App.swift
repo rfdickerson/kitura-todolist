@@ -181,11 +181,15 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
             if let json = body.asJson() {
 
+                let title = json["title"].stringValue
+                let order = json["order"].intValue
                 let completed = json["completed"].boolValue
 
-                todos.update(id, title: nil, order: nil, completed: completed)
+                let newItem = todos.update(id, title: title, order: order, completed: completed)
 
-                response.status(HttpStatusCode.OK)
+                let result = JSON(newItem!.serialize())
+                
+                response.status(HttpStatusCode.OK).sendJson(result)
 
             }
         } else {
