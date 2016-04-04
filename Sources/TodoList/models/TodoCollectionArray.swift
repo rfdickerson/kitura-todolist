@@ -148,7 +148,7 @@ class TodoCollectionArray: TodoCollection {
 
         writingQueue.queueSync() {
 
-            self._collection.removeValueForKey(id)
+            self._collection.removeValue(forKey: id)
             oncompletion()
         }
 
