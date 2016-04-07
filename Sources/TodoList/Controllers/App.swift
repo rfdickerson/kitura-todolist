@@ -68,14 +68,12 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     router.get("/todos/:id") {
         request, response, next in
         
-        let id: String? = request.params["id"]
-        
-        guard id != nil else {
+        guard let id = request.params["id"] else {
             response.status(HttpStatusCode.BAD_REQUEST)
             return
         }
         
-        todos.get(id!) {
+        todos.get(id) {
             
             item in
             
@@ -88,6 +86,10 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 } catch {
                     
                 }
+            } else {
+                Log.warning("Could not find the item")
+                response.status(HttpStatusCode.BAD_REQUEST)
+                return
             }
             
         }
