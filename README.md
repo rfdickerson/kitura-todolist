@@ -8,7 +8,9 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
 ## Installation
 
-1. Install the [latest Swift binaries](https://swift.org/download/) (at least as recent as the Feb 25, 2016 snapshot)
+1. Install the [03-24-DEVELOPMENT Swift toolchain](https://swift.org/download/) 
+
+    Note, we are working to bring Kitura up to support the 04-12 snapshot, however it does not work yet.
 
 2. Install Kitura dependencies:
 
