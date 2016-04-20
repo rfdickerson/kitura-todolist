@@ -1,8 +1,5 @@
 applications:
 - name: Kitura-TodoList
-  path: .
   memory: 256M
-  instances: 2
-  domain: mybluemix.net
-  host: kitura-todolist
-  disk_quota: 1024M
+  instances: 1
+  random-route: true
