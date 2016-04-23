@@ -31,33 +31,39 @@ import XCTest
 #endif
 
 class TodoCollectionTests: XCTestCase {
-
-	func testAddItem() {
-
-		let todos = TodoCollectionArray(baseURL: "http://localhost:8080/todos")
-
-		todos.add("Reticulate splines", order: 0, completed: true)
-
-		XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
-
-		todos.add("Herd llamas", order: 1, completed: false)
-
-		XCTAssertEqual(todos.count, 2, "There must be 2 elements in the collection")
-
-	}
-
-	func testRemoveItem() {
-
-		let todos = TodoCollectionArray(baseURL: "http://localhost:8080/todos")
-
-		let newitem = todos.add("Reticulate splines", order: 0, completed: true)
-
-		XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
-
-		todos.delete(newitem.id)
-
-		XCTAssertEqual(todos.count, 0, "There must be 0 element in the collection after delete")
-
-	}
+    let url = "http://localhost:8090/todos"
+    
+    func testAddItem() {
+        
+        let todos = TodoCollectionArray(baseURL: url)
+        
+        let expectation1 = expectation(withDescription: "Add first item")
+        todos.add("Reticulate splines", order: 0, completed: true, oncompletion: {_ in
+            XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
+            todos.add("Herd llamas", order: 1, completed: false, oncompletion: {_ in
+                XCTAssertEqual(todos.count, 2, "There must be 2 elements in the collection")
+                expectation1.fulfill()
+            })
+        })
+        
+        waitForExpectations(withTimeout: 5, handler: { error in XCTAssertNil(error, "Timeout") })
+        
+    }
+    
+    func testRemoveItem() {
+        
+        let todos = TodoCollectionArray(baseURL: url)
+        
+        let expectation1 = expectation(withDescription: "Remove item")
+        todos.add("Reticulate splines", order: 0, completed: true, oncompletion: {newitem in
+            XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
+            todos.delete(newitem.id, oncompletion: { _ in
+                XCTAssertEqual(todos.count, 0, "There must be 0 element in the collection after delete")
+                expectation1.fulfill()
+            })
+        })
+        
+        waitForExpectations(withTimeout: 5, handler: { error in XCTAssertNil(error, "Timeout") })
+    }
 
 }

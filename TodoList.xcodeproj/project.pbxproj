@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD3CC4091CCC370100792087 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/TodoList/main.swift /* main.swift */; };
+		BD3CC40A1CCC370100792087 /* Controllers/App.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/TodoList/Controllers/App.swift /* Controllers/App.swift */; };
+		BD3CC40B1CCC370100792087 /* models/TodoCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/TodoList/models/TodoCollection.swift /* models/TodoCollection.swift */; };
+		BD3CC40C1CCC370100792087 /* models/TodoCollectionArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/TodoList/models/TodoCollectionArray.swift /* models/TodoCollectionArray.swift */; };
+		BD3CC40D1CCC370100792087 /* models/TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = __PBXFileRef_Sources/TodoList/models/TodoItem.swift /* models/TodoItem.swift */; };
 		BDD7EB2A1CCBFDCF00317DE6 /* libLoggerAPI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_LoggerAPI" /* libLoggerAPI.dylib */; };
 		BDD7EB2B1CCBFDCF00317DE6 /* libSocket.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socket" /* libSocket.dylib */; };
 		BDD7EB2C1CCBFDCF00317DE6 /* libKituraSys.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_KituraSys" /* libKituraSys.dylib */; };
@@ -52,7 +57,6 @@
 		_LinkFileRef_LoggerAPI /* libLoggerAPI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_LoggerAPI" /* libLoggerAPI.dylib */; };
 		_LinkFileRef_Socket /* libSocket.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Socket" /* libSocket.dylib */; };
 		_LinkFileRef_SwiftyJSON /* libSwiftyJSON.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SwiftyJSON" /* libSwiftyJSON.dylib */; };
-		_LinkFileRef_TodoList /* TodoList in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_TodoList" /* TodoList */; };
 		"__src_cc_ref_Packages/CFEnvironment-0.0.3/Sources/CFEnvironment/App.swift" /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/CFEnvironment-0.0.3/Sources/CFEnvironment/App.swift" /* App.swift */; };
 		"__src_cc_ref_Packages/CFEnvironment-0.0.3/Sources/CFEnvironment/AppEnv.swift" /* AppEnv.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/CFEnvironment-0.0.3/Sources/CFEnvironment/AppEnv.swift" /* AppEnv.swift */; };
 		"__src_cc_ref_Packages/CFEnvironment-0.0.3/Sources/CFEnvironment/CFEnvironment.swift" /* CFEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/CFEnvironment-0.0.3/Sources/CFEnvironment/CFEnvironment.swift" /* CFEnvironment.swift */; };
@@ -177,13 +181,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Kitura";
 			remoteInfo = Kitura;
-		};
-		BDD7EB571CCBFDCF00317DE6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = __RootObject_ /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = "______Target_TodoList";
-			remoteInfo = TodoList;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -392,7 +389,6 @@
 				BDD7EB4B1CCBFDCF00317DE6 /* libLoggerAPI.dylib in Frameworks */,
 				BDD7EB4C1CCBFDCF00317DE6 /* libHeliumLogger.dylib in Frameworks */,
 				BDD7EB4D1CCBFDCF00317DE6 /* libKitura.dylib in Frameworks */,
-				_LinkFileRef_TodoList /* TodoList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -894,7 +890,6 @@
 				__Dependency_LoggerAPI /* PBXTargetDependency */,
 				__Dependency_HeliumLogger /* PBXTargetDependency */,
 				__Dependency_Kitura /* PBXTargetDependency */,
-				__Dependency_TodoList /* PBXTargetDependency */,
 			);
 			name = TodoList.testsuite;
 			productName = TodoListTestSuite;
@@ -1106,6 +1101,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				BD3CC4091CCC370100792087 /* main.swift in Sources */,
+				BD3CC40A1CCC370100792087 /* Controllers/App.swift in Sources */,
+				BD3CC40B1CCC370100792087 /* models/TodoCollection.swift in Sources */,
+				BD3CC40C1CCC370100792087 /* models/TodoCollectionArray.swift in Sources */,
+				BD3CC40D1CCC370100792087 /* models/TodoItem.swift in Sources */,
 				__src_cc_ref_Tests/TodoList/TodoCollectionTests.swift /* TodoCollectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1166,11 +1166,6 @@
 			isa = PBXTargetDependency;
 			target = "______Target_SwiftyJSON" /* SwiftyJSON */;
 			targetProxy = BDD7EB521CCBFDCF00317DE6 /* PBXContainerItemProxy */;
-		};
-		__Dependency_TodoList /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = "______Target_TodoList" /* TodoList */;
-			targetProxy = BDD7EB571CCBFDCF00317DE6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1331,6 +1326,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_TESTABILITY = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
@@ -1534,6 +1530,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_TESTABILITY = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "-DXcode";
