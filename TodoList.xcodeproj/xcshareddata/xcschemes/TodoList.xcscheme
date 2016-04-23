@@ -42,9 +42,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "______Target_BlueSocket"
-               BuildableName = "libBlueSocket.dylib"
-               BlueprintName = "BlueSocket"
+               BlueprintIdentifier = "______Target_Socket"
+               BuildableName = "libSocket.dylib"
+               BlueprintName = "Socket"
                ReferencedContainer = "container:TodoList.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -208,15 +208,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_LoggerAPI"
-            BuildableName = "libLoggerAPI.dylib"
-            BlueprintName = "LoggerAPI"
+            BlueprintIdentifier = "______Target_TodoList"
+            BuildableName = "TodoList"
+            BlueprintName = "TodoList"
             ReferencedContainer = "container:TodoList.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
