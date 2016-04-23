@@ -52,7 +52,7 @@ class TodoCollectionArray: TodoCollection {
 
     func clear( oncompletion: (Void) -> Void) {
 
-        writingQueue.queueSync() {
+        writingQueue.queueAsync() {
             self._collection.removeAll()
             oncompletion()
         }
@@ -61,7 +61,7 @@ class TodoCollectionArray: TodoCollection {
 
     func getAll( oncompletion: ([TodoItem]) -> Void ) {
 
-        writingQueue.queueSync() {
+        writingQueue.queueAsync() {
             oncompletion( [TodoItem](self._collection.values) )
         }
 
@@ -69,7 +69,7 @@ class TodoCollectionArray: TodoCollection {
     
     func get(id: String, oncompletion: (TodoItem?) -> Void ) {
     
-        writingQueue.queueSync() {
+        writingQueue.queueAsync() {
             oncompletion(self._collection[id])
         }
     }
@@ -93,7 +93,7 @@ class TodoCollectionArray: TodoCollection {
             url: self.baseURL + "/" + original
         )
 
-        writingQueue.queueSync() {
+        writingQueue.queueAsync() {
 
             self.idCounter+=1
 
@@ -130,7 +130,7 @@ class TodoCollectionArray: TodoCollection {
                 url: oldValue.url
             )
             
-            writingQueue.queueSync() {
+            writingQueue.queueAsync() {
                 
                 self._collection.updateValue(newValue, forKey: id)
             
@@ -146,7 +146,7 @@ class TodoCollectionArray: TodoCollection {
 
     func delete(id: String, oncompletion: (Void) -> Void) {
 
-        writingQueue.queueSync() {
+        writingQueue.queueAsync() {
 
             self._collection.removeValue(forKey: id)
             oncompletion()
