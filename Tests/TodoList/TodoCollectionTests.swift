@@ -38,9 +38,9 @@ class TodoCollectionTests: XCTestCase {
         let todos = TodoCollectionArray(baseURL: url)
         
         let expectation1 = expectation(withDescription: "Add first item")
-        todos.add("Reticulate splines", order: 0, completed: true, oncompletion: {_ in
+        todos.add("Reticulate splines", oncompletion: {_ in
             XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
-            todos.add("Herd llamas", order: 1, completed: false, oncompletion: {_ in
+            todos.add("Herd llamas", order: 1, completed: true, oncompletion: {_ in
                 XCTAssertEqual(todos.count, 2, "There must be 2 elements in the collection")
                 expectation1.fulfill()
             })

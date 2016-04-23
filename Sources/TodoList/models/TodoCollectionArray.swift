@@ -81,7 +81,7 @@ class TodoCollectionArray: TodoCollection {
     }
 
 
-    func add(title: String, order: Int, completed: Bool, oncompletion: (TodoItem) -> Void ) {
+    func add(title: String, order: Int = 0, completed: Bool = false, oncompletion: (TodoItem) -> Void ) {
 
         var original: String
         original = String(self.idCounter)
