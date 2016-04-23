@@ -55,7 +55,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             do {
                 try response.status(HttpStatusCode.OK).sendJson(json).end()
             } catch {
-                
+                Log.error("Todo collection could not be serialized")
             }
             
         }
@@ -70,6 +70,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         
         guard let id = request.params["id"] else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("Request does not contain ID")
             return
         }
         
@@ -84,7 +85,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 do {
                     try response.status(HttpStatusCode.OK).sendJson(result).end()
                 } catch {
-                    
+                    Log.error("Error sending response")
                 }
             } else {
                 Log.warning("Could not find the item")
@@ -116,19 +117,17 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     router.post("/") {
         request, response, next in
         
-        guard request.body != nil else {
+        guard let body = request.body else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("No body found in request")
             return
         }
-        
-        let body = request.body!
-        
-        guard body.asJson() != nil else {
+
+        guard let json = body.asJson() else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("Body is invalid JSON")
             return
         }
-        
-        let json = body.asJson()!
         
         let title = json["title"].stringValue
         let order = json["order"].intValue
@@ -145,7 +144,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             do  {
                 try response.status(HttpStatusCode.OK).sendJson(result).end()
             } catch {
-                Log.error("Something went wrong")
+                Log.error("Error sending response")
             }
             
         }
@@ -153,27 +152,30 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     
     router.post("/todos/:id") {
         request, response, next in
-        
-        let id: String? = request.params["id"]
-        
-        guard request.body != nil else {
-            Log.warning("No body")
+
+        guard let id = request.params["id"] else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("id parameter not found in request")
             return
         }
         
-        guard request.body!.asJson() != nil else {
+        guard let body = request.body else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("No body found in request")
             return
         }
         
-        let json = request.body!.asJson()!
+        guard let json = body.asJson() else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("Body is invalid JSON")
+            return
+        }
         
         let title = json["title"].stringValue
         let order = json["order"].intValue
         let completed = json["completed"].boolValue
         
-        todos.update(id!, title: title, order: order, completed: completed) {
+        todos.update(id, title: title, order: order, completed: completed) {
             
             newItem in
             
@@ -191,40 +193,43 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     router.patch("/todos/:id") {
         request, response, next in
         
-        let id: String? = request.params["id"]
-        
-        guard id != nil else {
+        guard let id = request.params["id"] else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("id parameter not found in request")
             return
         }
         
-        guard request.body != nil else {
+        guard let body = request.body else {
             response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("No body found in request")
+            return
+        }
+
+        guard let json = body.asJson() else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("Body is invalid JSON")
             return
         }
         
-        let body = request.body!
+        let title = json["title"].stringValue
+        let order = json["order"].intValue
+        let completed = json["completed"].boolValue
         
-        if let json = body.asJson() {
+        todos.update(id, title: title, order: order, completed: completed) {
             
-            let title = json["title"].stringValue
-            let order = json["order"].intValue
-            let completed = json["completed"].boolValue
+            newItem in
             
-            todos.update(id!, title: title, order: order, completed: completed) {
+            if let newItem = newItem {
                 
-                newItem in
+                let result = JSON(newItem.serialize())
                 
-                if let newItem = newItem {
-                    
-                    let result = JSON(newItem.serialize())
-                    
-                    do {
-                        try response.status(HttpStatusCode.OK).sendJson(result).end()
-                    } catch {}
+                do {
+                    try response.status(HttpStatusCode.OK).sendJson(result).end()
+                } catch {
+                    Log.error("Error sending response")
                 }
-                
             }
+            
             
         }
     }
@@ -237,16 +242,13 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         
         Log.info("Requesting a delete")
         
-        let id: String? = request.params["id"]
-        
-        guard id != nil else {
+        guard let id = request.params["id"] else {
             Log.warning("Could not parse ID")
             response.status(HttpStatusCode.BAD_REQUEST)
             return
         }
         
-        
-        todos.delete(id!) {
+        todos.delete(id) {
             
             do {
                 try response.status(HttpStatusCode.OK).end()
@@ -276,6 +278,5 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         
         
     }
-    
     
 } // end of SetupRoutes()
