@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
- 
+
 import XCTest
 
 @testable import TodoList
@@ -21,7 +21,7 @@ import XCTest
 #if os(Linux)
 
 	extension TodoCollectionTests : XCTestCaseProvider {
-		var allTests : [(String, () throws -> Void)] {
+		var allTests: [(String, () throws -> Void)] {
 			return [
 				("testAddItem", testAddItem),
 				("testRemoveItem", testRemoveItem)
@@ -32,11 +32,11 @@ import XCTest
 
 class TodoCollectionTests: XCTestCase {
     let url = "http://localhost:8090/todos"
-    
+
     func testAddItem() {
-        
+
         let todos = TodoCollectionArray(baseURL: url)
-        
+
         let expectation1 = expectation(withDescription: "Add first item")
         todos.add("Reticulate splines", oncompletion: {_ in
             XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
@@ -45,15 +45,15 @@ class TodoCollectionTests: XCTestCase {
                 expectation1.fulfill()
             })
         })
-        
+
         waitForExpectations(withTimeout: 5, handler: { error in XCTAssertNil(error, "Timeout") })
-        
+
     }
-    
+
     func testRemoveItem() {
-        
+
         let todos = TodoCollectionArray(baseURL: url)
-        
+
         let expectation1 = expectation(withDescription: "Remove item")
         todos.add("Reticulate splines", order: 0, completed: true, oncompletion: {newitem in
             XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
@@ -62,7 +62,7 @@ class TodoCollectionTests: XCTestCase {
                 expectation1.fulfill()
             })
         })
-        
+
         waitForExpectations(withTimeout: 5, handler: { error in XCTAssertNil(error, "Timeout") })
     }
 

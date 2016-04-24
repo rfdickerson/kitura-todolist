@@ -52,7 +52,7 @@ setupRoutes( router, todos: todos )
 /// Listen to port 8090
 ///
 do {
-    
+
     let appEnv = try CFEnvironment.getAppEnv()
     let ip: String = appEnv.bind
     let port: Int = appEnv.port

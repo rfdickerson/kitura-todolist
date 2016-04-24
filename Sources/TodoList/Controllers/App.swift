@@ -28,7 +28,7 @@ class AllRemoteOriginMiddleware: RouterMiddleware {
     func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
 
         response.setHeader("Access-Control-Allow-Origin", value: "*")
-    
+
         next()
     }
 }
@@ -47,41 +47,41 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     */
     router.get("/") {
         request, response, next in
-        
+
         todos.getAll() {
             todos in
-            
+
             let json = JSON(TodoCollectionArray.serialize(todos))
             do {
                 try response.status(HttpStatusCode.OK).sendJson(json).end()
             } catch {
                 Log.error("Todo collection could not be serialized")
             }
-            
+
         }
-        
+
     }
-    
+
     /**
      Get information about a todo item by ID
      */
     router.get("/todos/:id") {
         request, response, next in
-        
+
         guard let id = request.params["id"] else {
             response.status(HttpStatusCode.BAD_REQUEST)
             Log.error("Request does not contain ID")
             return
         }
-        
+
         todos.get(id) {
-            
+
             item in
-            
+
             if let item = item {
-                
+
                 let result = JSON(item.serialize())
-                
+
                 do {
                     try response.status(HttpStatusCode.OK).sendJson(result).end()
                 } catch {
@@ -92,31 +92,31 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 response.status(HttpStatusCode.BAD_REQUEST)
                 return
             }
-            
+
         }
-        
+
     }
-    
+
     /**
      Handle options
      */
     router.options("/*") {
         request, response, next in
-        
+
         response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
         response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
-        
+
         response.status(HttpStatusCode.OK)
-        
+
         next()
     }
-    
+
     /**
      Add a todo list item
      */
     router.post("/") {
         request, response, next in
-        
+
         guard let body = request.body else {
             response.status(HttpStatusCode.BAD_REQUEST)
             Log.error("No body found in request")
@@ -128,28 +128,28 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             Log.error("Body is invalid JSON")
             return
         }
-        
+
         let title = json["title"].stringValue
         let order = json["order"].intValue
         let completed = json["completed"].boolValue
-        
+
         Log.info("Received \(title)")
-        
+
         todos.add(title, order: order, completed: completed) {
-            
+
             newItem in
-            
+
             let result = JSON(newItem.serialize())
-            
-            do  {
+
+            do {
                 try response.status(HttpStatusCode.OK).sendJson(result).end()
             } catch {
                 Log.error("Error sending response")
             }
-            
+
         }
     }
-    
+
     router.post("/todos/:id") {
         request, response, next in
 
@@ -158,47 +158,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             Log.error("id parameter not found in request")
             return
         }
-        
-        guard let body = request.body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
-            Log.error("No body found in request")
-            return
-        }
-        
-        guard let json = body.asJson() else {
-            response.status(HttpStatusCode.BAD_REQUEST)
-            Log.error("Body is invalid JSON")
-            return
-        }
-        
-        let title = json["title"].stringValue
-        let order = json["order"].intValue
-        let completed = json["completed"].boolValue
-        
-        todos.update(id, title: title, order: order, completed: completed) {
-            
-            newItem in
-            
-            let result = JSON(newItem!.serialize())
-            
-            response.status(HttpStatusCode.OK).sendJson(result)
-            
-        }
-        
-    }
-    
-    /**
-     Patch or update an existing Todo item
-     */
-    router.patch("/todos/:id") {
-        request, response, next in
-        
-        guard let id = request.params["id"] else {
-            response.status(HttpStatusCode.BAD_REQUEST)
-            Log.error("id parameter not found in request")
-            return
-        }
-        
+
         guard let body = request.body else {
             response.status(HttpStatusCode.BAD_REQUEST)
             Log.error("No body found in request")
@@ -210,64 +170,104 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             Log.error("Body is invalid JSON")
             return
         }
-        
+
         let title = json["title"].stringValue
         let order = json["order"].intValue
         let completed = json["completed"].boolValue
-        
+
         todos.update(id, title: title, order: order, completed: completed) {
-            
+
             newItem in
-            
+
+            let result = JSON(newItem!.serialize())
+
+            response.status(HttpStatusCode.OK).sendJson(result)
+
+        }
+
+    }
+
+    /**
+     Patch or update an existing Todo item
+     */
+    router.patch("/todos/:id") {
+        request, response, next in
+
+        guard let id = request.params["id"] else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("id parameter not found in request")
+            return
+        }
+
+        guard let body = request.body else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("No body found in request")
+            return
+        }
+
+        guard let json = body.asJson() else {
+            response.status(HttpStatusCode.BAD_REQUEST)
+            Log.error("Body is invalid JSON")
+            return
+        }
+
+        let title = json["title"].stringValue
+        let order = json["order"].intValue
+        let completed = json["completed"].boolValue
+
+        todos.update(id, title: title, order: order, completed: completed) {
+
+            newItem in
+
             if let newItem = newItem {
-                
+
                 let result = JSON(newItem.serialize())
-                
+
                 do {
                     try response.status(HttpStatusCode.OK).sendJson(result).end()
                 } catch {
                     Log.error("Error sending response")
                 }
             }
-            
-            
+
+
         }
     }
-    
+
     ///
     /// Delete an individual todo item
     ///
     router.delete("/todos/:id") {
         request, response, next in
-        
+
         Log.info("Requesting a delete")
-        
+
         guard let id = request.params["id"] else {
             Log.warning("Could not parse ID")
             response.status(HttpStatusCode.BAD_REQUEST)
             return
         }
-        
+
         todos.delete(id) {
-            
+
             do {
                 try response.status(HttpStatusCode.OK).end()
             } catch {
                 Log.error("Could not produce response")
             }
-            
+
         }
-        
+
     }
-    
+
     /**
      Delete all the todo items
      */
     router.delete("/") {
         request, response, next in
-        
+
         Log.info("Requested clearing the entire list")
-        
+
         todos.clear() {
             do {
                 try response.status(HttpStatusCode.OK).end()
@@ -275,8 +275,8 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 Log.error("Could not produce response")
             }
         }
-        
-        
+
+
     }
-    
+
 } // end of SetupRoutes()

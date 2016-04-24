@@ -26,7 +26,7 @@ import Foundation
 class TodoCollectionArray: TodoCollection {
 
     var baseURL: String
-    
+
     ///
     /// Ensure in order writes to the collection
     ///
@@ -41,7 +41,7 @@ class TodoCollectionArray: TodoCollection {
     /// Internal storage of TodoItems as a Dictionary
     ///
     private var _collection = [String: TodoItem]()
-    
+
     init(baseURL: String) {
         self.baseURL = baseURL
     }
@@ -66,9 +66,9 @@ class TodoCollectionArray: TodoCollection {
         }
 
     }
-    
+
     func get(id: String, oncompletion: (TodoItem?) -> Void ) {
-    
+
         writingQueue.queueAsync() {
             oncompletion(self._collection[id])
         }
@@ -85,7 +85,7 @@ class TodoCollectionArray: TodoCollection {
 
         var original: String
         original = String(self.idCounter)
-        
+
         let newItem = TodoItem(id: original,
             order: order,
             title: title,
@@ -98,50 +98,50 @@ class TodoCollectionArray: TodoCollection {
             self.idCounter+=1
 
             self._collection[original] = newItem
-    
+
             Log.info("Added \(title)")
-    
+
             oncompletion(newItem)
 
         }
 
-    
+
     }
-    
-    /// 
+
+    ///
     /// Update an element by id
     ///
     /// - Parameter id: id for the element
-    /// - 
+    /// -
     func update(id: String, title: String?, order: Int?, completed: Bool?, oncompletion: (TodoItem?) -> Void ) {
-        
+
         // search for element
-        
+
         let oldValue = _collection[id]
-        
+
         if let oldValue = oldValue {
-            
+
             // use nil coalescing operator
-            
+
             let newValue = TodoItem( id: id,
                 order: order ?? oldValue.order,
                 title: title ?? oldValue.title,
                 completed: completed ?? oldValue.completed,
                 url: oldValue.url
             )
-            
+
             writingQueue.queueAsync() {
-                
+
                 self._collection.updateValue(newValue, forKey: id)
-            
+
                 oncompletion( newValue )
             }
-            
+
         } else {
             Log.warning("Could not find item in database with ID: \(id)")
         }
-        
-        
+
+
     }
 
     func delete(id: String, oncompletion: (Void) -> Void) {
@@ -154,6 +154,6 @@ class TodoCollectionArray: TodoCollection {
 
     }
 
-    
-    
+
+
 }
