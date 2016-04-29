@@ -38,9 +38,9 @@ class TodoCollectionTests: XCTestCase {
         let todos = TodoCollectionArray(baseURL: url)
 
         let expectation1 = expectation(withDescription: "Add first item")
-        todos.add("Reticulate splines", oncompletion: {_ in
+        todos.add(title: "Reticulate splines", oncompletion: {_ in
             XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
-            todos.add("Herd llamas", order: 1, completed: true, oncompletion: {_ in
+            todos.add(title: "Herd llamas", order: 1, completed: true, oncompletion: {_ in
                 XCTAssertEqual(todos.count, 2, "There must be 2 elements in the collection")
                 expectation1.fulfill()
             })
@@ -55,7 +55,7 @@ class TodoCollectionTests: XCTestCase {
         let todos = TodoCollectionArray(baseURL: url)
 
         let expectation1 = expectation(withDescription: "Remove item")
-        todos.add("Reticulate splines", order: 0, completed: true, oncompletion: {newitem in
+        todos.add(title: "Reticulate splines", order: 0, completed: true, oncompletion: {newitem in
             XCTAssertEqual(todos.count, 1, "There must be 1 element in the collection")
             todos.delete(newitem.id, oncompletion: { _ in
                 XCTAssertEqual(todos.count, 0, "There must be 0 element in the collection after delete")
