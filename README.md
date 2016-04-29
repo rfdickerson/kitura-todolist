@@ -8,16 +8,13 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
 ## Installation
 
-1. Install the [03-24-DEVELOPMENT Swift toolchain](https://swift.org/download/) 
-
-    Note, we are working to bring Kitura up to support the 04-12 snapshot, however it does not work yet.
+1. Install the [04-25-DEVELOPMENT Swift toolchain](https://swift.org/download/) 
 
 2. Install Kitura dependencies:
 
   1. Mac OS X: 
   
     `brew install http-parser pcre2 curl hiredis`
-  
   
   2. Linux (Ubuntu 15.10):
    
