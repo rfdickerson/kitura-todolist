@@ -34,17 +34,17 @@ protocol TodoCollection {
 
     var count: Int { get }
 
-    func clear( oncompletion: (Void) -> Void)
+    func clear(oncompletion: (Void) -> Void)
 
-    func getAll( oncompletion: ([TodoItem]) -> Void )
+    func getAll(oncompletion: ([TodoItem]) -> Void )
 
-    func get(id: String, oncompletion: (TodoItem?) -> Void )
+    func get(_ id: String, oncompletion: (TodoItem?) -> Void )
 
     func add(title: String, order: Int, completed: Bool, oncompletion: (TodoItem) -> Void )
 
     func update(id: String, title: String?, order: Int?, completed: Bool?, oncompletion: (TodoItem?) -> Void )
 
-    func delete(id: String, oncompletion: (Void) -> Void)
+    func delete(_ id: String, oncompletion: (Void) -> Void)
 
     static func serialize(items: [TodoItem]) -> [JSONDictionary]
 

@@ -51,9 +51,9 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         todos.getAll() {
             todos in
 
-            let json = JSON(TodoCollectionArray.serialize(todos))
+            let json = JSON(TodoCollectionArray.serialize(items: todos))
             do {
-                try response.status(HttpStatusCode.OK).sendJson(json).end()
+                try response.status(HttpStatusCode.OK).send(json: json).end()
             } catch {
                 Log.error("Todo collection could not be serialized")
             }
@@ -83,7 +83,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 let result = JSON(item.serialize())
 
                 do {
-                    try response.status(HttpStatusCode.OK).sendJson(result).end()
+                    try response.status(HttpStatusCode.OK).send(json: result).end()
                 } catch {
                     Log.error("Error sending response")
                 }
@@ -135,14 +135,14 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
         Log.info("Received \(title)")
 
-        todos.add(title, order: order, completed: completed) {
+        todos.add(title: title, order: order, completed: completed) {
 
             newItem in
 
             let result = JSON(newItem.serialize())
 
             do {
-                try response.status(HttpStatusCode.OK).sendJson(result).end()
+                try response.status(HttpStatusCode.OK).send(json: result).end()
             } catch {
                 Log.error("Error sending response")
             }
@@ -175,13 +175,13 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         let order = json["order"].intValue
         let completed = json["completed"].boolValue
 
-        todos.update(id, title: title, order: order, completed: completed) {
+        todos.update(id: id, title: title, order: order, completed: completed) {
 
             newItem in
 
             let result = JSON(newItem!.serialize())
 
-            response.status(HttpStatusCode.OK).sendJson(result)
+            response.status(HttpStatusCode.OK).send(json: result)
 
         }
 
@@ -215,7 +215,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         let order = json["order"].intValue
         let completed = json["completed"].boolValue
 
-        todos.update(id, title: title, order: order, completed: completed) {
+        todos.update(id: id, title: title, order: order, completed: completed) {
 
             newItem in
 
@@ -224,7 +224,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 let result = JSON(newItem.serialize())
 
                 do {
-                    try response.status(HttpStatusCode.OK).sendJson(result).end()
+                    try response.status(HttpStatusCode.OK).send(json: result).end()
                 } catch {
                     Log.error("Error sending response")
                 }

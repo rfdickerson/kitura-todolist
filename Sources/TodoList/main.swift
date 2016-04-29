@@ -46,7 +46,7 @@ let todos: TodoCollection = TodoCollectionArray(baseURL: "http://localhost:8090/
 // todos.add("Reticulate splines", order: 0, completed: false)
 // todos.add("Herd llamas", order: 1, completed: false)
 
-setupRoutes( router, todos: todos )
+setupRoutes( router: router, todos: todos )
 
 ///
 /// Listen to port 8090
@@ -57,7 +57,7 @@ do {
     let ip: String = appEnv.bind
     let port: Int = appEnv.port
 
-    let server = HttpServer.listen(port, delegate: router)
+    let server = HttpServer.listen(port: port, delegate: router)
 
     Server.run()
 

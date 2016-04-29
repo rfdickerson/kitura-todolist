@@ -67,7 +67,7 @@ class TodoCollectionArray: TodoCollection {
 
     }
 
-    func get(id: String, oncompletion: (TodoItem?) -> Void ) {
+    func get(_ id: String, oncompletion: (TodoItem?) -> Void ) {
 
         writingQueue.queueAsync() {
             oncompletion(self._collection[id])
@@ -144,7 +144,7 @@ class TodoCollectionArray: TodoCollection {
 
     }
 
-    func delete(id: String, oncompletion: (Void) -> Void) {
+    func delete(_ id: String, oncompletion: (Void) -> Void) {
 
         writingQueue.queueAsync() {
 
