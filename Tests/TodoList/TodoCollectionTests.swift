@@ -31,11 +31,10 @@ import XCTest
 #endif
 
 class TodoCollectionTests: XCTestCase {
-    let url = "http://localhost:8090/todos"
 
     func testAddItem() {
 
-        let todos = TodoCollectionArray(baseURL: url)
+        let todos = TodoCollectionArray()
 
         let expectation1 = expectation(withDescription: "Add first item")
         todos.add(title: "Reticulate splines", oncompletion: {_ in
@@ -52,7 +51,7 @@ class TodoCollectionTests: XCTestCase {
 
     func testRemoveItem() {
 
-        let todos = TodoCollectionArray(baseURL: url)
+        let todos = TodoCollectionArray()
 
         let expectation1 = expectation(withDescription: "Remove item")
         todos.add(title: "Reticulate splines", order: 0, completed: true, oncompletion: {newitem in

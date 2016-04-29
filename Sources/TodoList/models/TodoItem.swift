@@ -31,8 +31,14 @@ struct TodoItem {
     /// Full path URL to the resource
     /// ex. http://localhost:8090/todos/508
     ///
-    var url: String = ""
-
+    var url: String {
+        if let url = config.url {
+            return url + "/" + config.firstPathSegment + "/" + id
+        } else {
+            return ""
+        }
+    }
+    
     ///
     /// Transform the structure to a Dictionary
     ///

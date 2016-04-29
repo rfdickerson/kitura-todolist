@@ -26,43 +26,39 @@ import Foundation
 import CFEnvironment
 
 ///
-/// The Kitura router
-///
-let router = Router()
-
-///
 /// Set up a simple Logger
 ///
 Log.logger = HeliumLogger()
 
 ///
+/// Set up the app configuration
+///
+
+public let config = Configuration()
+
+///
+/// The Kitura router
+///
+let router = Router()
+
+///
 /// Setup the database
 ///
-let todos: TodoCollection = TodoCollectionArray(baseURL: "http://localhost:8090/todos")
+let todos: TodoCollection = TodoCollectionArray()
 
 ///
-/// Add some example data to the database
+/// Setup routes
 ///
-// todos.add("Reticulate splines", order: 0, completed: false)
-// todos.add("Herd llamas", order: 1, completed: false)
-
 setupRoutes( router: router, todos: todos )
 
 ///
-/// Listen to port 8090
+/// Start the server
 ///
-do {
-
-    let appEnv = try CFEnvironment.getAppEnv()
-    let ip: String = appEnv.bind
-    let port: Int = appEnv.port
-
-    let server = HttpServer.listen(port: port, delegate: router)
-
-    Server.run()
-
-    Log.info("Server is started on \(appEnv.url).")
-
-} catch CFEnvironmentError.InvalidValue {
-    Log.error("Oops, something went wrong... Server did not start!")
+guard let port = config.port else {
+    "Could not initialize environment. Exiting..."
+    fatalError()
 }
+
+let server = HttpServer.listen(port: port, delegate: router)
+Server.run()
+Log.info("Server is started on \(config.url).")

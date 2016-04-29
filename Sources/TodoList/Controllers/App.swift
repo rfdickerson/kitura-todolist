@@ -65,7 +65,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     /**
      Get information about a todo item by ID
      */
-    router.get("/todos/:id") {
+    router.get(config.firstPathSegment + "/:id") {
         request, response, next in
 
         guard let id = request.params["id"] else {
@@ -150,7 +150,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         }
     }
 
-    router.post("/todos/:id") {
+    router.post(config.firstPathSegment + "/:id") {
         request, response, next in
 
         guard let id = request.params["id"] else {
@@ -190,7 +190,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     /**
      Patch or update an existing Todo item
      */
-    router.patch("/todos/:id") {
+    router.patch(config.firstPathSegment + "/:id") {
         request, response, next in
 
         guard let id = request.params["id"] else {
@@ -237,7 +237,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
     ///
     /// Delete an individual todo item
     ///
-    router.delete("/todos/:id") {
+    router.delete(config.firstPathSegment + "/:id") {
         request, response, next in
 
         Log.info("Requesting a delete")
