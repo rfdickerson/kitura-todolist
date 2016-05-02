@@ -43,9 +43,11 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 Make sure you are running at least XCode 7.3. 
 
 1. Automatically generate an XCode project from the Package.swift:
-- `swift build -X`
+
+  `swift build -X`
 
 2. Open XCode project
+
   `open TodoList.xcodeproj`
 
 3. Switch the toolchain to the open source version of Swift.
