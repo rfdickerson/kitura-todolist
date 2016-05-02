@@ -14,21 +14,21 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
   1. Mac OS X: 
   
-    `brew install http-parser pcre2 curl hiredis`
+    `brew install curl`
   
   2. Linux (Ubuntu 15.10):
    
-    `sudo apt-get install libhttp-parser-dev libcurl4-openssl-dev libhiredis-dev`
+    `sudo apt-get install libcurl4-openssl-dev`
 
 3. Build TodoList application
 
   1. Mac OS X: 
 	
-	`swift build -Xcc -fblocks -Xswiftc -I/usr/local/include -Xlinker -L/usr/local/lib`
+	`swift build`
 	
   2. Linux:
   
-    `swift build -Xcc -fblocks`
+    	`swift build -Xcc -fblocks`
 	
 4. Run the TodoList application:
 
@@ -38,6 +38,17 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
    [http://www.todobackend.com/client/index.html?http://localhost:8090](http://www.todobackend.com/client/index.html?http://localhost:8090)
 
+## Developing and Running in XCode:
+
+Make sure you are running at least XCode 7.3. 
+
+1. Automatically generate an XCode project from the Package.swift:
+- `swift build -X`
+
+2. Open XCode project
+  `open TodoList.xcodeproj`
+
+3. Switch the toolchain to the open source version of Swift.
 
 ## Tests
 
