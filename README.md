@@ -2,6 +2,8 @@
 
 *An example using the Kitura web framework and HTTP Server to develop a backend for a todo list organizer*
 
+> Supports the 04-25 SNAPSHOT, we are working on supporting the latest 05-03 SNAPSHOT.
+
 ## Tutorial
 
 This project accompanies the tutorial on IBM Developer Works: [Build End-to-End Cloud Apps using Swift with Kitura](https://developer.ibm.com/swift/2016/02/22/building-end-end-cloud-apps-using-swift-kitura/)
@@ -57,6 +59,8 @@ Make sure you are running at least XCode 7.3.
   To run unit tests, run:
   
   `swift test`
+  
+  If you are using XCode, you can run the Test Cases as normal in the IDE.
 
 ## License 
 
