@@ -2,6 +2,8 @@
 
 *An example using the Kitura web framework and HTTP Server to develop a backend for a todo list organizer*
 
+[![Build Status](https://travis-ci.org/IBM-Swift/Kitura-TodoList.svg?branch=master)](https://travis-ci.org/IBM-Swift/Kitura-TodoList)
+
 > Supports the 04-25 SNAPSHOT, we are working on supporting the latest 05-03 SNAPSHOT.
 
 ## Tutorial
