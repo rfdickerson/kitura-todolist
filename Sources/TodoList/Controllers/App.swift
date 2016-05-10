@@ -53,7 +53,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
             let json = JSON(TodoCollectionArray.serialize(items: todos))
             do {
-                try response.status(HttpStatusCode.OK).send(json: json).end()
+                try response.status(.OK).send(json: json).end()
             } catch {
                 Log.error("Todo collection could not be serialized")
             }
@@ -69,7 +69,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         request, response, next in
 
         guard let id = request.params["id"] else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("Request does not contain ID")
             return
         }
@@ -83,13 +83,13 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 let result = JSON(item.serialize())
 
                 do {
-                    try response.status(HttpStatusCode.OK).send(json: result).end()
+                    try response.status(.OK).send(json: result).end()
                 } catch {
                     Log.error("Error sending response")
                 }
             } else {
                 Log.warning("Could not find the item")
-                response.status(HttpStatusCode.BAD_REQUEST)
+                response.status(.badRequest)
                 return
             }
 
@@ -106,7 +106,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
         response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
 
-        response.status(HttpStatusCode.OK)
+        response.status(.OK)
 
         next()
     }
@@ -118,13 +118,13 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         request, response, next in
 
         guard let body = request.body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("No body found in request")
             return
         }
 
         guard case let .Json(json) = body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("Body is invalid JSON")
             return
         }
@@ -142,7 +142,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             let result = JSON(newItem.serialize())
 
             do {
-                try response.status(HttpStatusCode.OK).send(json: result).end()
+                try response.status(.OK).send(json: result).end()
             } catch {
                 Log.error("Error sending response")
             }
@@ -154,19 +154,19 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         request, response, next in
 
         guard let id = request.params["id"] else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("id parameter not found in request")
             return
         }
 
         guard let body = request.body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("No body found in request")
             return
         }
 
         guard case let .Json(json) = body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("Body is invalid JSON")
             return
         }
@@ -181,7 +181,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
             let result = JSON(newItem!.serialize())
 
-            response.status(HttpStatusCode.OK).send(json: result)
+            response.status(.OK).send(json: result)
 
         }
 
@@ -194,19 +194,19 @@ func setupRoutes(router: Router, todos: TodoCollection) {
         request, response, next in
 
         guard let id = request.params["id"] else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("id parameter not found in request")
             return
         }
 
         guard let body = request.body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("No body found in request")
             return
         }
 
         guard case let .Json(json) = body else {
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             Log.error("Body is invalid JSON")
             return
         }
@@ -224,7 +224,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
                 let result = JSON(newItem.serialize())
 
                 do {
-                    try response.status(HttpStatusCode.OK).send(json: result).end()
+                    try response.status(.OK).send(json: result).end()
                 } catch {
                     Log.error("Error sending response")
                 }
@@ -244,14 +244,14 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
         guard let id = request.params["id"] else {
             Log.warning("Could not parse ID")
-            response.status(HttpStatusCode.BAD_REQUEST)
+            response.status(.badRequest)
             return
         }
 
         todos.delete(id) {
 
             do {
-                try response.status(HttpStatusCode.OK).end()
+                try response.status(.OK).end()
             } catch {
                 Log.error("Could not produce response")
             }
@@ -270,7 +270,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
 
         todos.clear() {
             do {
-                try response.status(HttpStatusCode.OK).end()
+                try response.status(.OK).end()
             } catch {
                 Log.error("Could not produce response")
             }

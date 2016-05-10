@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/IBM-Swift/Kitura-TodoList.svg?branch=master)](https://travis-ci.org/IBM-Swift/Kitura-TodoList)
 
-> Supports the 04-25 SNAPSHOT, we are working on supporting the latest 05-03 SNAPSHOT.
+> Supports the 05-03 SNAPSHOT.
 
 ## Tutorial
 
@@ -12,7 +12,7 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
 ## Installation
 
-1. Install the [04-25-DEVELOPMENT Swift toolchain](https://swift.org/download/) 
+1. Install the [05-03-DEVELOPMENT Swift toolchain](https://swift.org/download/) 
 
 2. Install Kitura dependencies:
 

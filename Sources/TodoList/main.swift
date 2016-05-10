@@ -59,6 +59,6 @@ guard let port = config.port else {
     fatalError()
 }
 
-let server = HttpServer.listen(port: port, delegate: router)
+let server = HTTPServer.listen(port: port, delegate: router)
 Server.run()
 Log.info("Server is started on \(config.url).")
