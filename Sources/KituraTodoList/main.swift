@@ -21,6 +21,8 @@ import KituraSys
 import HeliumLogger
 import LoggerAPI
 
+import TodoList
+
 import Foundation
 
 import CFEnvironment
@@ -44,21 +46,14 @@ let router = Router()
 ///
 /// Setup the database
 ///
-let todos: TodoCollection = TodoCollectionArray()
+let todos = TodoList()
 
 ///
 /// Setup routes
 ///
 setupRoutes( router: router, todos: todos )
 
-///
-/// Start the server
-///
-guard let port = config.port else {
-    "Could not initialize environment. Exiting..."
-    fatalError()
-}
 
-let server = HTTPServer.listen(port: port, delegate: router)
+let server = HTTPServer.listen(port: config.port, delegate: router)
 Server.run()
 Log.info("Server is started on \(config.url).")
