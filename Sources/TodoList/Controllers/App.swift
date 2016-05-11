@@ -123,7 +123,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             return
         }
 
-        guard case let .Json(json) = body else {
+        guard case let .json(json) = body else {
             response.status(.badRequest)
             Log.error("Body is invalid JSON")
             return
@@ -165,7 +165,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             return
         }
 
-        guard case let .Json(json) = body else {
+        guard case let .json(json) = body else {
             response.status(.badRequest)
             Log.error("Body is invalid JSON")
             return
@@ -205,7 +205,7 @@ func setupRoutes(router: Router, todos: TodoCollection) {
             return
         }
 
-        guard case let .Json(json) = body else {
+        guard case let .json(json) = body else {
             response.status(.badRequest)
             Log.error("Body is invalid JSON")
             return

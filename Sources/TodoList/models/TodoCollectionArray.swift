@@ -28,7 +28,7 @@ class TodoCollectionArray: TodoCollection {
     ///
     /// Ensure in order writes to the collection
     ///
-    let writingQueue = Queue(type: .SERIAL, label: "Writing Queue")
+    let writingQueue = Queue(type: .serial, label: "Writing Queue")
     
     ///
     /// Incrementing variable used for new index values
