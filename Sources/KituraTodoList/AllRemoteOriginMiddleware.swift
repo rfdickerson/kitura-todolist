@@ -15,32 +15,16 @@
  **/
 
 import Kitura
-import KituraNet
-import KituraSys
 
-import HeliumLogger
-import LoggerAPI
-
-import TodoList
-
-import Foundation
-
-import CFEnvironment
-
-
-Log.logger = HeliumLogger()
-
-public let config = Configuration()
-
-
-let todos = TodoList()
-
-let controller = TodoListController(backend: todos)
-
-
-//setupRoutes( router: router, todos: todos )
-
-
-let server = HTTPServer.listen(port: config.port, delegate: controller.router)
-Server.run()
-Log.info("Server is started on \(config.url).")
+/**
+ Custom middleware that allows Cross Origin HTTP requests
+ This will allow wwww.todobackend.com to communicate with your server
+ */
+class AllRemoteOriginMiddleware: RouterMiddleware {
+    func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
+        
+        response.setHeader("Access-Control-Allow-Origin", value: "*")
+        
+        next()
+    }
+}

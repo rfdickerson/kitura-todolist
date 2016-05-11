@@ -22,33 +22,38 @@ import SwiftyJSON
 
 import TodoListAPI
 
-/**
- Custom middleware that allows Cross Origin HTTP requests
- This will allow wwww.todobackend.com to communicate with your server
- */
-class AllRemoteOriginMiddleware: RouterMiddleware {
-    func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
-        
-        response.setHeader("Access-Control-Allow-Origin", value: "*")
-        
-        next()
-    }
-}
 
-/**
- Sets up all the routes for the Todo List application
- */
-func setupRoutes(router: Router, todos: TodoListAPI) {
+final class TodoListController {
     
-    router.all("/*", middleware: BodyParser())
+    let todos: TodoListAPI
+    let router = Router()
     
-    router.all("/*", middleware: AllRemoteOriginMiddleware())
+    init(backend: TodoListAPI) {
+        self.todos = backend
+        
+        _setupRoutes()
+        
+    }
     
-    /**
-     Get all the todos
-     */
-    router.get("/") {
-        request, response, next in
+    private func _setupRoutes() {
+        
+        let id = "\(config.firstPathSegment)/:id"
+        
+        router.all("/*", middleware: BodyParser())
+        router.all("/*", middleware: AllRemoteOriginMiddleware())
+        router.get("/", handler: self.get)
+        router.get(id, handler: getByID)
+        router.options("/*", handler: getOptions)
+        router.post("/", handler: addItem )
+        router.post(id, handler: postByID)
+        router.patch(id, handler: updateItemByID)
+        router.delete(id, handler: deleteByID)
+        router.delete("/", handler: deleteAll)
+        
+        
+    }
+    
+    private func get(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         
         do {
             
@@ -70,11 +75,7 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
         
     }
     
-    /**
-     Get information about a todo item by ID
-     */
-    router.get(config.firstPathSegment + "/:id") {
-        request, response, next in
+    private func getByID(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         
         guard let id = request.params["id"] else {
             response.status(HTTPStatusCode.badRequest)
@@ -109,25 +110,17 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
         
     }
     
-    /**
-     Handle options
-     */
-    router.options("/*") {
-        request, response, next in
-        
+    private func getOptions(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
         response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
         
         response.status(HTTPStatusCode.OK)
         
         next()
+        
     }
     
-    /**
-     Add a todo list item
-     */
-    router.post("/") {
-        request, response, next in
+    private func addItem(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         
         guard let body = request.body else {
             response.status(HTTPStatusCode.badRequest)
@@ -164,11 +157,10 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
         } catch {
             response.status(HTTPStatusCode.badRequest)
         }
+        
     }
     
-    router.post(config.firstPathSegment + "/:id") {
-        request, response, next in
-        
+    private func postByID(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         guard let id = request.params["id"] else {
             response.status(HTTPStatusCode.badRequest)
             Log.error("id parameter not found in request")
@@ -205,14 +197,10 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
         } catch {
             response.status(HTTPStatusCode.badRequest)
         }
+        
     }
     
-    /**
-     Patch or update an existing Todo item
-     */
-    router.patch(config.firstPathSegment + "/:id") {
-        request, response, next in
-        
+    private func updateItemByID(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         guard let id = request.params["id"] else {
             response.status(HTTPStatusCode.badRequest)
             Log.error("id parameter not found in request")
@@ -256,13 +244,10 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
         } catch {
             response.status(HTTPStatusCode.badRequest)
         }
+        
     }
     
-    ///
-    /// Delete an individual todo item
-    ///
-    router.delete(config.firstPathSegment + "/:id") {
-        request, response, next in
+    private func deleteByID(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         
         Log.info("Requesting a delete")
         
@@ -288,12 +273,7 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
         
     }
     
-    /**
-     Delete all the todo items
-     */
-    router.delete("/") {
-        request, response, next in
-        
+    private func deleteAll(request: RouterRequest, response: RouterResponse, next: ()->Void) {
         Log.info("Requested clearing the entire list")
         
         do {
@@ -308,7 +288,8 @@ func setupRoutes(router: Router, todos: TodoListAPI) {
             response.status(HTTPStatusCode.badRequest)
         }
         
-        
     }
     
-} // end of SetupRoutes()
+    
+}
+
