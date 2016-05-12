@@ -29,19 +29,18 @@ import TodoListAPI
     typealias JSONDictionary = [String: Any]
 #endif
 
-extension TodoItem {
+protocol DictionaryConvertible {
+    func toDictionary() -> JSONDictionary
+}
+
+extension TodoItem : DictionaryConvertible {
     
     var url: String {
         
         return config.url + "/" + config.firstPathSegment + "/" + id
     }
     
-    /**
-     Transform the structure to a Dictionary
-     
-     Returns: a Dictionary populated with fields.
-     */
-    func serialize() -> JSONDictionary {
+    func toDictionary() -> JSONDictionary {
         var result = JSONDictionary()
         result["id"] = self.id
         result["order"] = self.order
@@ -54,8 +53,12 @@ extension TodoItem {
     
 }
 
-func serialize(items: [TodoItem]) -> [JSONDictionary] {
+extension Array where Element : DictionaryConvertible {
     
-    return items.map { $0.serialize() }
+    func toDictionary() -> [JSONDictionary] {
+    
+        return self.map { $0.toDictionary() }
+    
+    }
     
 }

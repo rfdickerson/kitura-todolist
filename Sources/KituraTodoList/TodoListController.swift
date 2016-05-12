@@ -61,7 +61,7 @@ final class TodoListController {
                 todos in
                 
                 do {
-                    let json = JSON(serialize(items: todos))
+                    let json = JSON(todos.toDictionary())
                     
                     try response.status(HTTPStatusCode.OK).send(json: json).end()
                 } catch {
@@ -90,7 +90,7 @@ final class TodoListController {
                 
                 if let item = item {
                     
-                    let result = JSON(item.serialize())
+                    let result = JSON(item.toDictionary())
                     
                     do {
                         try response.status(HTTPStatusCode.OK).send(json: result).end()
@@ -145,7 +145,7 @@ final class TodoListController {
                 
                 newItem in
                 
-                let result = JSON(newItem.serialize())
+                let result = JSON(newItem.toDictionary())
                 
                 do {
                     try response.status(HTTPStatusCode.OK).send(json: result).end()
@@ -188,7 +188,7 @@ final class TodoListController {
                 
                 newItem in
                 
-                let result = JSON(newItem!.serialize())
+                let result = JSON(newItem!.toDictionary())
                 
                 response.status(HTTPStatusCode.OK).send(json: result)
                 
@@ -230,7 +230,7 @@ final class TodoListController {
                 
                 if let newItem = newItem {
                     
-                    let result = JSON(newItem.serialize())
+                    let result = JSON(newItem.toDictionary())
                     
                     do {
                         try response.status(HTTPStatusCode.OK).send(json: result).end()
