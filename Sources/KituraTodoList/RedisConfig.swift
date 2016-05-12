@@ -12,35 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
-
-import Kitura
-import KituraNet
-import KituraSys
-
-import HeliumLogger
-import LoggerAPI
-
-import TodoList
-
-import Foundation
-
-import CFEnvironment
+ */
 
 
-Log.logger = HeliumLogger()
+struct RedisConfig {
+    
+    static let DefaultRedisHost = "localhost"
+    static let DefaultRedisPort: UInt16 = 6379
 
-let config = Configuration.sharedInstance
-
-
-let todos = TodoList()
-
-let controller = TodoListController(backend: todos)
-
-
-//setupRoutes( router: router, todos: todos )
-
-
-let server = HTTPServer.listen(port: config.port, delegate: controller.router)
-Server.run()
-Log.info("Server is started on \(config.url).")
+    var host: String = RedisConfig.DefaultRedisHost
+    var port: UInt16 = RedisConfig.DefaultRedisPort
+    var password: String?
+    
+}

@@ -12,35 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- **/
+ */
 
-import Kitura
-import KituraNet
-import KituraSys
+struct CloudantConfig {
 
-import HeliumLogger
-import LoggerAPI
-
-import TodoList
-
-import Foundation
-
-import CFEnvironment
-
-
-Log.logger = HeliumLogger()
-
-let config = Configuration.sharedInstance
-
-
-let todos = TodoList()
-
-let controller = TodoListController(backend: todos)
-
-
-//setupRoutes( router: router, todos: todos )
-
-
-let server = HTTPServer.listen(port: config.port, delegate: controller.router)
-Server.run()
-Log.info("Server is started on \(config.url).")
+    let username: String
+    let password: String
+    let host: String
+    let port: UInt16
+    
+}

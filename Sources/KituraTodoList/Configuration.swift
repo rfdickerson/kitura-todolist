@@ -20,12 +20,12 @@ import SwiftyJSON
 
 import LoggerAPI
 
-public struct Configuration {
+public final class Configuration {
     
     let firstPathSegment = "todos"
     
-    static let DefaultRedisHost = "localhost"
-    static let DefaultRedisPort: UInt16 = 6379
+    static let RedisServiceName = "Redis*"
+    static let CloudantServiceName = "Cloudant*"
     
     static let DefaultWebHost = "localhost"
     static let DefaultWebPort = 8090
@@ -33,39 +33,59 @@ public struct Configuration {
     var url: String = Configuration.DefaultWebHost
     var port: Int = Configuration.DefaultWebPort
     
-    var redisHost: String = Configuration.DefaultRedisHost
-    var redisPort: UInt16 = Configuration.DefaultRedisPort
+    var redisConfig: RedisConfig?
+    var cloudantConfig: CloudantConfig?
+  
+    static var sharedInstance = Configuration()
     
-    var redisPassword: String?
-    
-    init() {
+    private init() {
         do {
-            let appEnv = try CFEnvironment.getAppEnv()
-            port = appEnv.port
-            url = appEnv.url
-            
-            if let redisService = try CFEnvironment.getAppEnv().getService(spec: "Redis by Compose-ph") {
-                
-                if let credentials = redisService.credentials {
-                    redisHost = credentials["public_hostname"].stringValue
-                    redisPort = UInt16(credentials["username"].stringValue)!
-                    redisPassword = credentials["password"].stringValue
-                }
-                
-                
-            } else {
-                Log.error("Could not retrieve Redis service.")
-            }
-            
-            //redisOpts?.credentials
-            
-            // load from cfenv
-            
+            try loadWebConfig()
+            try loadRedisConfig()
         }
         catch _ {
             Log.error("Could not retrieve CF environment.")
         }
         
-        
+    }
+    
+    private func loadWebConfig() throws {
+        let appEnv = try CFEnvironment.getAppEnv()
+        port = appEnv.port
+        url = appEnv.url
+    }
+    
+    private func loadRedisConfig() throws {
+        if let redisService = try CFEnvironment.getAppEnv().getService(spec: Configuration.RedisServiceName) {
+            
+            if let credentials = redisService.credentials {
+                let host = credentials["public_hostname"].stringValue
+                let port = UInt16(credentials["username"].stringValue)!
+                let password = credentials["password"].stringValue
+                
+                redisConfig = RedisConfig(host: host, port: port, password: password)
+            }
+            
+        } else {
+            Log.error("Could not retrieve Redis service.")
+        }
+    }
+    
+    private func loadCloudantConfig() throws {
+        if let redisService = try CFEnvironment.getAppEnv().getService(spec: Configuration.CloudantServiceName) {
+            
+            if let credentials = redisService.credentials {
+                let host = credentials["host"].stringValue
+                let username = credentials["username"].stringValue
+                let password = credentials["password"].stringValue
+                let port = UInt16(credentials["port"].stringValue)!
+                
+                cloudantConfig = CloudantConfig(username: username, password: password, host: host, port: port)
+            }
+            
+        } else {
+            Log.error("Could not retrieve Redis service.")
+        }
+ 
     }
 }
