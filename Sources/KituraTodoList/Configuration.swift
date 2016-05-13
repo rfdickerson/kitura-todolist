@@ -33,20 +33,24 @@ public final class Configuration {
     var url: String = Configuration.DefaultWebHost
     var port: Int = Configuration.DefaultWebPort
     
-    var redisConfig: RedisConfig?
-    var cloudantConfig: CloudantConfig?
+    var databaseConfiguration: DatabaseConfiguration?
   
     static var sharedInstance = Configuration()
     
     private init() {
+        
+    }
+    
+    public func loadCloudFoundry() {
         do {
             try loadWebConfig()
             try loadRedisConfig()
+            try loadCloudantConfig()
         }
         catch _ {
             Log.error("Could not retrieve CF environment.")
         }
-        
+
     }
     
     private func loadWebConfig() throws {
@@ -58,33 +62,37 @@ public final class Configuration {
     private func loadRedisConfig() throws {
         if let redisService = try CFEnvironment.getAppEnv().getService(spec: Configuration.RedisServiceName) {
             
+            Log.info("Found Redis service named \(redisService.name)")
+            
             if let credentials = redisService.credentials {
                 let host = credentials["public_hostname"].stringValue
                 let port = UInt16(credentials["username"].stringValue)!
                 let password = credentials["password"].stringValue
                 
-                redisConfig = RedisConfig(host: host, port: port, password: password)
+                databaseConfiguration = DatabaseConfiguration(host: host, port: port, username: nil, password: password)
             }
             
         } else {
-            Log.error("Could not retrieve Redis service.")
+            Log.info("Could not find Bluemix Redis service.")
         }
     }
     
     private func loadCloudantConfig() throws {
-        if let redisService = try CFEnvironment.getAppEnv().getService(spec: Configuration.CloudantServiceName) {
+        if let service = try CFEnvironment.getAppEnv().getService(spec: Configuration.CloudantServiceName) {
             
-            if let credentials = redisService.credentials {
+            Log.info("Found Cloudant service named \(service.name)")
+            
+            if let credentials = service.credentials {
                 let host = credentials["host"].stringValue
                 let username = credentials["username"].stringValue
                 let password = credentials["password"].stringValue
                 let port = UInt16(credentials["port"].stringValue)!
                 
-                cloudantConfig = CloudantConfig(username: username, password: password, host: host, port: port)
+                databaseConfiguration = DatabaseConfiguration(host: host, port: port, username: username, password: password )
             }
             
         } else {
-            Log.error("Could not retrieve Redis service.")
+            Log.info("Could not find Bluemix Cloudant service.")
         }
  
     }

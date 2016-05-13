@@ -31,7 +31,7 @@ import CFEnvironment
 Log.logger = HeliumLogger()
 
 let config = Configuration.sharedInstance
-
+config.loadCloudFoundry()
 
 let todos = TodoList()
 
