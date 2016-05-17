@@ -111,8 +111,9 @@ final class TodoListController {
     }
     
     private func getOptions(request: RouterRequest, response: RouterResponse, next: ()->Void) {
-        response.setHeader("Access-Control-Allow-Headers", value: "accept, content-type")
-        response.setHeader("Access-Control-Allow-Methods", value: "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH")
+
+        response.headers["Access-Control-Allow-Headers"] = "accept, content-type"
+        response.headers["Access-Control-Allow-Methods"] = "GET,HEAD,POST,DELETE,OPTIONS,PUT,PATCH"
         
         response.status(HTTPStatusCode.OK)
         
