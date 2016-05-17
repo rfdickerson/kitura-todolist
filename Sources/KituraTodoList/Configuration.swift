@@ -20,6 +20,8 @@ import SwiftyJSON
 
 import LoggerAPI
 
+import TodoListAPI
+
 public final class Configuration {
     
     let firstPathSegment = "todos"
