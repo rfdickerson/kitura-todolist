@@ -25,9 +25,6 @@ import TodoList
 
 import Foundation
 
-
-
-
 Log.logger = HeliumLogger()
 
 let config = Configuration.sharedInstance
@@ -37,10 +34,6 @@ let todos = TodoList()
 
 let controller = TodoListController(backend: todos)
 
-
-//setupRoutes( router: router, todos: todos )
-
-
-let server = HTTPServer.listen(port: config.port, delegate: controller.router)
+let server = HTTPServer.listen(port: config.appEnv.port, delegate: controller.router)
 Server.run()
 Log.info("Server is started on \(config.url).")
