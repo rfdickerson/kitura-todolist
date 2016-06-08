@@ -64,6 +64,36 @@ Make sure you are running at least XCode 7.3.
   
   If you are using XCode, you can run the Test Cases as normal in the IDE.
 
+## Deploying to BlueMix
+
+1. Get an account for [Bluemix](https://new-console.ng.bluemix.net/?direct=classic)
+
+2. Dowload and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
+
+`cf login`
+`bluemix api https://api.ng.bluemix.net`
+`bluemix login -u username -o org_name -s space_name`
+
+Be sure to change the directory to the Kitura-TodoList directory where the manifest.yml file is located.
+
+3. Run `cf push`
+
+***Note** The uploading droplet stage should take a long time, roughly 5-7 minutes. If it worked correctly, it should say:
+
+```
+1 of 1 instances running 
+
+App started
+```
+
+4. Create the Cloudant backend and attach it to your instance.
+
+```
+cf create-service cloudantNoSQLDB Shared database_name`
+cf bind-service Kitura-TodoList database_name`
+cf restage`
+```
+
 ## License 
 
 This library is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
