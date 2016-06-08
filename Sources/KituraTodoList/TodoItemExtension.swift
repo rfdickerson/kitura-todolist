@@ -14,39 +14,51 @@
  * limitations under the License.
  **/
 
+import Foundation
+
+import TodoListAPI
+
 /**
  Because bridging is not complete in Linux, we must use Any objects for dictionaries
  instead of AnyObject. The main branch SwiftyJSON takes as input AnyObject, however
  our patched version for Linux accepts Any.
-*/
+ */
 #if os(OSX)
     typealias JSONDictionary = [String: AnyObject]
 #else
     typealias JSONDictionary = [String: Any]
 #endif
 
-/**
- TodoCollection
+protocol DictionaryConvertible {
+    func toDictionary() -> JSONDictionary
+}
 
- TodoCollection defines the DAO for todo lists
-*/
-protocol TodoCollection {
+extension TodoItem : DictionaryConvertible {
+    
+    var url: String {
+        
+        return config.url + "/" + config.firstPathSegment + "/" + id
+    }
+    
+    func toDictionary() -> JSONDictionary {
+        var result = JSONDictionary()
+        result["id"] = self.id
+        result["order"] = self.order
+        result["title"] = self.title
+        result["completed"] = self.completed
+        result["url"] = self.url
+        
+        return result
+    }
+    
+}
 
-    var count: Int { get }
-
-    func clear(oncompletion: (Void) -> Void)
-
-    func getAll(oncompletion: ([TodoItem]) -> Void )
-
-    func get(_ id: String, oncompletion: (TodoItem?) -> Void )
-
-    func add(title: String, order: Int, completed: Bool, oncompletion: (TodoItem) -> Void )
-
-    func update(id: String, title: String?, order: Int?, completed: Bool?, oncompletion: (TodoItem?) -> Void )
-
-    func delete(_ id: String, oncompletion: (Void) -> Void)
-
-    static func serialize(items: [TodoItem]) -> [JSONDictionary]
-
-
+extension Array where Element : DictionaryConvertible {
+    
+    func toDictionary() -> [JSONDictionary] {
+    
+        return self.map { $0.toDictionary() }
+    
+    }
+    
 }

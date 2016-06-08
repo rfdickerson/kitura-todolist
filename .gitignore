@@ -3,6 +3,6 @@ Packages
 *.xcuserstate
 TodoList.xcodeproj/xcuserdata
 TodoList.xcodeproj/project.xcworkspace/xcuserdata/Robert.xcuserdatad/UserInterfaceState.xcuserstate
-TodoList.xcodeproj
+*.xcodeproj
 build
 KituraTodoList.xcodeproj

@@ -12,25 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ **/
+
+import Kitura
+
+/**
+ Custom middleware that allows Cross Origin HTTP requests
+ This will allow wwww.todobackend.com to communicate with your server
  */
-
-import Foundation
-import CFEnvironment
-
-public struct Configuration {
-    
-    let port: Int?
-    let url: String?
-    let firstPathSegment = "todos"
-    init() {
-        do {
-            let appEnv = try CFEnvironment.getAppEnv()
-            port = appEnv.port
-            url = appEnv.url
-        }
-        catch _ {
-            port = nil
-            url = nil
-        }
+class AllRemoteOriginMiddleware: RouterMiddleware {
+    func handle(request: RouterRequest, response: RouterResponse, next: () -> Void) {
+        
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        
+        next()
     }
 }

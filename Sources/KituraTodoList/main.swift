@@ -21,44 +21,26 @@ import KituraSys
 import HeliumLogger
 import LoggerAPI
 
+import TodoList
+
 import Foundation
 
-import CFEnvironment
 
-///
-/// Set up a simple Logger
-///
+
+
 Log.logger = HeliumLogger()
 
-///
-/// Set up the app configuration
-///
+let config = Configuration.sharedInstance
+config.loadCloudFoundry()
 
-public let config = Configuration()
+let todos = TodoList()
 
-///
-/// The Kitura router
-///
-let router = Router()
+let controller = TodoListController(backend: todos)
 
-///
-/// Setup the database
-///
-let todos: TodoCollection = TodoCollectionArray()
 
-///
-/// Setup routes
-///
-setupRoutes( router: router, todos: todos )
+//setupRoutes( router: router, todos: todos )
 
-///
-/// Start the server
-///
-guard let port = config.port else {
-    "Could not initialize environment. Exiting..."
-    fatalError()
-}
 
-let server = HTTPServer.listen(port: port, delegate: router)
+let server = HTTPServer.listen(port: config.port, delegate: controller.router)
 Server.run()
 Log.info("Server is started on \(config.url).")
