@@ -76,39 +76,39 @@ Make sure you are running at least XCode 7.3.
 
 2. Dowload and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
 
-```
-cf login
-bluemix api https://api.ng.bluemix.net
-bluemix login -u username -o org_name -s space_name
-```
+    ```
+    cf login
+    bluemix api https://api.ng.bluemix.net
+    bluemix login -u username -o org_name -s space_name
+    ```
 
-Be sure to change the directory to the Kitura-TodoList directory where the manifest.yml file is located.
+    Be sure to change the directory to the Kitura-TodoList directory where the manifest.yml file is located.
 
 3. Run `cf push`
 
-***Note** The uploading droplet stage should take a long time, roughly 5-7 minutes. If it worked correctly, it should say:
+    ***Note** The uploading droplet stage should take a long time, roughly 5-7 minutes. If it worked correctly, it should say:
 
-```
-1 of 1 instances running 
+    ```
+    1 of 1 instances running 
 
-App started
-```
+    App started
+    ```
 
 4. Create the Cloudant backend and attach it to your instance.
 
-```
-cf create-service cloudantNoSQLDB Shared database_name
-cf bind-service Kitura-TodoList database_name
-cf restage
-```
+    ```
+    cf create-service cloudantNoSQLDB Shared database_name
+    cf bind-service Kitura-TodoList database_name
+    cf restage
+    ```
 
 5. Create a new design in Cloudant
 
-Log in to Bluemix, and select New View
+    Log in to Bluemix, and select New View
 
-Create a new design called `_design/example`
+    Create a new design called `_design/example`
 
-Inside of the design example, create 2 views:
+    Inside of the design example, create 2 views:
 
 6. Create a view named `all_todos`:
 
