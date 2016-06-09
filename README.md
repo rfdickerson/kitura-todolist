@@ -10,7 +10,7 @@
 
 This project accompanies the tutorial on IBM Developer Works: [Build End-to-End Cloud Apps using Swift with Kitura](https://developer.ibm.com/swift/2016/02/22/building-end-end-cloud-apps-using-swift-kitura/)
 
-## Installation
+## Quick start for running locally
 
 1. Install the [05-03-DEVELOPMENT Swift toolchain](https://swift.org/download/) 
 
@@ -34,11 +34,50 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
   
     	`swift build -Xcc -fblocks`
 	
-4. Run the TodoList application:
+4. Install couchdb:
+
+    If on OS X, install with Homebrew with:
+    
+    `brew install couchdb`
+    
+    If on Ubuntu, install with apt-get:
+    
+    `apt-get install couchdb`
+    
+    Follow your distribution's directions for starting the CouchDB server
+    
+5. Create the necessary design and views for CouchDB:
+
+    Create a new file in your directory called mydesign.json and add the following:
+    
+    ```javascript
+    {
+    "_id": "_design/example",
+        "views" : {
+            "all_todos" : {
+                "map" : "function(doc) { if (doc.type == 'todo' && doc.active) { emit(doc._id, [doc.title, doc.completed, doc.order]);
+             }}"
+        },
+        "total_todos": {
+            "map" : "function(doc) { if (doc.type == 'todo' && doc.active) { emit(doc.id, 1); }}",
+            "reduce" : "_count"
+            }
+        }
+    }
+    ```
+
+    Run the following on the command line:
+    
+    ```
+    curl -X PUT http://127.0.0.1:5984/todolist
+    curl -X PUT http://127.0.0.1:5984/todolist/_design/example --data-binary @mydesign.json
+    ```
+
+5. Run the TodoList application:
 
 	`./.build/debug/TodoList`
 	
-5. Open up your browser, and view: 
+6. Open up your browser, and view: 
 
    [http://www.todobackend.com/client/index.html?http://localhost:8090](http://www.todobackend.com/client/index.html?http://localhost:8090)
 
