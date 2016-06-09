@@ -26,8 +26,8 @@ public final class Configuration {
     
     let firstPathSegment = "todos"
     
-    static let RedisServiceName = "Redis*"
-    static let CloudantServiceName = "Cloudant*"
+    static let RedisServiceName = "*Redis*"
+    static let CloudantServiceName = "*Cloudant*"
     
     static let DefaultWebHost = "localhost"
     static let DefaultWebPort = 8090
@@ -46,7 +46,7 @@ public final class Configuration {
     public func loadCloudFoundry() {
         do {
             try loadWebConfig()
-            try loadRedisConfig()
+            // try loadRedisConfig()
             try loadCloudantConfig()
         }
         catch _ {
@@ -94,7 +94,7 @@ public final class Configuration {
             }
             
         } else {
-            Log.info("Could not find Bluemix Cloudant service.")
+            Log.info("Could not find Bluemix Cloudant service defaulting to local CouchDB")
         }
  
     }

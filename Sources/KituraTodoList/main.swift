@@ -30,7 +30,12 @@ Log.logger = HeliumLogger()
 let config = Configuration.sharedInstance
 config.loadCloudFoundry()
 
-let todos = TodoList()
+let todos: TodoList
+if let dbConfig = config.databaseConfiguration {
+    todos = TodoList(dbConfig)
+} else {
+    todos = TodoList()
+}
 
 let controller = TodoListController(backend: todos)
 
