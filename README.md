@@ -56,6 +56,12 @@ Make sure you are running at least XCode 7.3.
 
 3. Switch the toolchain to the open source version of Swift.
 
+4. Add Library search paths *This is a temporary work around*
+
+    Currently 05-03 snapshot of Swift has trouble finding the compiled C libraries that are located in .build/debug. You must manually add a search path to the XCode project. Open the XCode project and in both the ***Kitura*** and ***Kitura-net*** modules, add the following to your ***Library Search Paths***:
+    
+    `$SRCROOT/.build/debug`
+
 ## Tests
 
   To run unit tests, run:
