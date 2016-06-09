@@ -70,9 +70,11 @@ Make sure you are running at least XCode 7.3.
 
 2. Dowload and install the [Cloud Foundry tools](https://new-console.ng.bluemix.net/docs/starters/install_cli.html):
 
-`cf login`
-`bluemix api https://api.ng.bluemix.net`
-`bluemix login -u username -o org_name -s space_name`
+```
+cf login
+bluemix api https://api.ng.bluemix.net
+bluemix login -u username -o org_name -s space_name
+```
 
 Be sure to change the directory to the Kitura-TodoList directory where the manifest.yml file is located.
 
@@ -89,10 +91,50 @@ App started
 4. Create the Cloudant backend and attach it to your instance.
 
 ```
-cf create-service cloudantNoSQLDB Shared database_name`
-cf bind-service Kitura-TodoList database_name`
-cf restage`
+cf create-service cloudantNoSQLDB Shared database_name
+cf bind-service Kitura-TodoList database_name
+cf restage
 ```
+
+5. Create a new design in Cloudant
+
+Log in to Bluemix, and select New View
+
+Create a new design called `_design/example`
+
+Inside of the design example, create 2 views:
+
+6. Create a view named `all_todos`:
+
+This view will return all of the todo elements in your database.
+
+Add the following Map function:
+
+```javascript
+function(doc) {
+    if (doc.type == 'todo' && doc.active) {
+        emit(doc._id, [doc.title, doc.completed, doc.order]);
+    }
+}
+```
+
+Leave Reduce as None.
+
+7. Create a view named `total_todos`:
+
+This view will return the count of all the todo documents in your database.
+
+```javascript
+function(doc) {
+    if (doc.type == 'todo' && doc.active) {
+        emit(doc.id, 1);
+    }
+}
+```
+
+Set the reduce function to `_count` which will tally all of the returned documents.
+
+
 
 ## License 
 
