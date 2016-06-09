@@ -104,41 +104,35 @@ Make sure you are running at least XCode 7.3.
 
 5. Create a new design in Cloudant
 
-    Log in to Bluemix, and select New View
+    Log in to Bluemix, and select New View. Create a new design called `_design/example`. Inside of the design example, create 2 views:
 
-    Create a new design called `_design/example`
+6. Create a view named `all_todos` in the example design:
 
-    Inside of the design example, create 2 views:
+    This view will return all of the todo elements in your database. Add the following Map function:
 
-6. Create a view named `all_todos`:
-
-This view will return all of the todo elements in your database.
-
-Add the following Map function:
-
-```javascript
-function(doc) {
-    if (doc.type == 'todo' && doc.active) {
-        emit(doc._id, [doc.title, doc.completed, doc.order]);
+    ```javascript
+    function(doc) {
+        if (doc.type == 'todo' && doc.active) {
+            emit(doc._id, [doc.title, doc.completed, doc.order]);
+        }
     }
-}
-```
+    ```
 
-Leave Reduce as None.
+    Leave Reduce as None.
 
-7. Create a view named `total_todos`:
+7. Create a view named `total_todos` in the example design:
 
-This view will return the count of all the todo documents in your database.
+    This view will return the count of all the todo documents in your database.
 
-```javascript
-function(doc) {
-    if (doc.type == 'todo' && doc.active) {
-        emit(doc.id, 1);
+    ```javascript
+    function(doc) {
+        if (doc.type == 'todo' && doc.active) {
+            emit(doc.id, 1);
+        }
     }
-}
-```
+    ```
 
-Set the reduce function to `_count` which will tally all of the returned documents.
+    Set the reduce function to `_count` which will tally all of the returned documents.
 
 
 
