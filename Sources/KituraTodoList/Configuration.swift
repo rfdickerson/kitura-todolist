@@ -27,7 +27,7 @@ public final class Configuration {
     let firstPathSegment = "todos"
     
     static let RedisServiceName = "*Redis*"
-    static let CloudantServiceName = "*Cloudant*"
+    static let CloudantServiceName = "TodoList-Cloudant"
     
     static let DefaultWebHost = "localhost"
     static let DefaultWebPort = 8090
@@ -94,7 +94,7 @@ public final class Configuration {
             }
             
         } else {
-            Log.info("Could not find Bluemix Cloudant service defaulting to local CouchDB")
+            Log.info("Could not find Bluemix Cloudant service")
         }
  
     }
