@@ -15,7 +15,7 @@
  */
 
 import Foundation
-import CloudEnvironment
+import CloudFoundryEnv
 import SwiftyJSON
 
 import LoggerAPI
@@ -56,13 +56,13 @@ public final class Configuration {
     }
     
     private func loadWebConfig() throws {
-        let appEnv = try CloudEnvironment.getAppEnv()
+        let appEnv = try CloudFoundryEnv.getAppEnv()
         port = appEnv.port
         url = appEnv.url
     }
     
     private func loadRedisConfig() throws {
-        if let redisService = try CloudEnvironment.getAppEnv().getService(spec: Configuration.RedisServiceName) {
+        if let redisService = try CloudFoundryEnv.getAppEnv().getService(spec: Configuration.RedisServiceName) {
             
             Log.info("Found Redis service named \(redisService.name)")
             
@@ -80,7 +80,7 @@ public final class Configuration {
     }
     
     private func loadCloudantConfig() throws {
-        if let service = try CloudEnvironment.getAppEnv().getService(spec: Configuration.CloudantServiceName) {
+        if let service = try CloudFoundryEnv.getAppEnv().getService(spec: Configuration.CloudantServiceName) {
             
             Log.info("Found Cloudant service named \(service.name)")
             
