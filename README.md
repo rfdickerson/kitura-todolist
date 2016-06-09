@@ -55,11 +55,18 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
     "_id": "_design/example",
         "views" : {
             "all_todos" : {
-                "map" : "function(doc) { if (doc.type == 'todo' && doc.active) { emit(doc._id, [doc.title, doc.completed, doc.order]);
-             }}"
+                "map" : "function(doc) { 
+                    if (doc.type == 'todo' && doc.active) { 
+                        emit(doc._id, [doc.title, doc.completed, doc.order]);
+                }"
+             }
         },
         "total_todos": {
-            "map" : "function(doc) { if (doc.type == 'todo' && doc.active) { emit(doc.id, 1); }}",
+            "map" : "function(doc) { 
+                   if (doc.type == 'todo' && doc.active) { 
+                       emit(doc.id, 1); 
+                   }
+                }",
             "reduce" : "_count"
             }
         }
