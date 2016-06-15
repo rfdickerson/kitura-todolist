@@ -24,7 +24,11 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
    
     `sudo apt-get install libcurl4-openssl-dev`
 
-3. Build TodoList application
+3. Clone and move to TodoList application
+
+    `git clone https://github.com/IBM-Swift/Kitura-TodoList && cd Kitura-TodoList`
+
+4. Build TodoList application
 
   1. Mac OS X: 
 	
@@ -34,7 +38,7 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
   
     	`swift build -Xcc -fblocks`
 	
-4. Install couchdb:
+5. Install couchdb:
 
     If on OS X, install with Homebrew with:
     
@@ -46,7 +50,7 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
     
     Follow your distribution's directions for starting the CouchDB server
     
-5. Create the necessary design and views for CouchDB:
+6. Create the necessary design and views for CouchDB:
 
     Create a new file in your directory called mydesign.json and add the following:
     
@@ -80,11 +84,11 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
     curl -X PUT http://127.0.0.1:5984/todolist/_design/example --data-binary @mydesign.json
     ```
 
-5. Run the TodoList application:
+7. Run the TodoList application:
 
 	`./.build/debug/TodoList`
 	
-6. Open up your browser, and view: 
+8. Open up your browser, and view: 
 
    [http://www.todobackend.com/client/index.html?http://localhost:8090](http://www.todobackend.com/client/index.html?http://localhost:8090)
 
