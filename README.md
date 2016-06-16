@@ -50,7 +50,7 @@ This project accompanies the tutorial on IBM Developer Works: [Build End-to-End 
 
     Create a new file in your directory called mydesign.json and add the following:
     
-    ```javascript
+    ```
     {
     "_id": "_design/example",
         "views" : {
