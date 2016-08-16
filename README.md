@@ -1,8 +1,8 @@
 # Kitura To-do List Backend
 
-> This project is deprecated, instead use the following repositories instead
+To-do List backend that uses an in-memory Dictionary for storing tasks.
 
-## Examples:
+## Examples with Databases:
 
 - [TodoList with CouchDB](https://github.com/IBM-Swift/todolist-couchdb)
 - [TodoList with MongoDB](https://github.com/IBM-Swift/todolist-mongodb)
