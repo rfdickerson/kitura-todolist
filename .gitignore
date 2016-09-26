@@ -6,3 +6,4 @@ TodoList.xcodeproj/project.xcworkspace/xcuserdata/Robert.xcuserdatad/UserInterfa
 *.xcodeproj
 build
 KituraTodoList.xcodeproj
+.DS_Store
