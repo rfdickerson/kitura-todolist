@@ -1,0 +1,5 @@
+applications:
+- name: Kitura-TodoList
+  memory: 256M
+  instances: 2
+  random-route: true
