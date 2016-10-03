@@ -1,4 +1,4 @@
-# SuperTodoList
+# Simple TodoList
 
 Server-side Swift conference tutorial
 
