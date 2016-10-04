@@ -16,7 +16,7 @@
 
 import Foundation
 
-struct Task {
+struct TodoListItem {
 
     let id:             UUID
     let description:    String
@@ -25,9 +25,9 @@ struct Task {
     
 }
 
-extension Task: Equatable { }
+extension TodoListItem: Equatable { }
 
-func == (lhs: Task, rhs: Task) -> Bool {
+func == (lhs: TodoListItem, rhs: TodoListItem) -> Bool {
     if  lhs.id          == rhs.id,
         lhs.description == rhs.description,
         lhs.createdAt   == rhs.createdAt,
@@ -39,7 +39,7 @@ func == (lhs: Task, rhs: Task) -> Bool {
 
 }
 
-extension Task: StringValuePairConvertible {
+extension TodoListItem: StringValuePairConvertible {
     var stringValuePairs: StringValuePair {
         return [
             "id"            :   "\(self.id)",

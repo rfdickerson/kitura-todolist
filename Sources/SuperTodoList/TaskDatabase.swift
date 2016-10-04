@@ -19,18 +19,18 @@ import Foundation
 
 class TaskDatabase {
 
-    var tasks: [Task] = []
+    var tasks: [TodoListItem] = []
     
-    func getAllTasks(oncompletion: ([Task]) -> Void) {
+    func getAllTasks(oncompletion: ([TodoListItem]) -> Void) {
         
         oncompletion(self.tasks)
         
     }
     
-    func addTask( task: Task, oncompletion: (Task) -> Void) {
+    func addTask( TodoListItem: TodoListItem, oncompletion: (TodoListItem) -> Void) {
         
-        tasks.append(task)
-        oncompletion(task)
+        tasks.append(TodoListItem)
+        oncompletion(TodoListItem)
     }
     
 }

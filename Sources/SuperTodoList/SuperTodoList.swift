@@ -33,7 +33,7 @@ public class SuperTodoList {
         router.post("/v1/tasks", handler: handleAddTask)
         
         taskDatabase.addTask(
-            task: Task(id: UUID(),
+            TodoListItem: TodoListItem(id: UUID(),
                  description: "Buy candy",
                  createdAt: Date(),
                  isCompleted: false)
@@ -73,15 +73,15 @@ extension SuperTodoList {
         let description = json["description"].stringValue
         
         
-        let newTask = Task(id: UUID(), description: description, createdAt: Date(), isCompleted: false)
+        let newTask = TodoListItem(id: UUID(), description: description, createdAt: Date(), isCompleted: false)
         
         queue.sync {
             
-            taskDatabase.addTask(task: newTask) { task in
+            taskDatabase.addTask(TodoListItem: newTask) { TodoListItem in
                 
-                Log.info("Adding a task!")
+                Log.info("Adding a TodoListItem!")
                 
-                response.status(.OK).send("Added a task")
+                response.status(.OK).send("Added a TodoListItem")
                 next()
             }
             
