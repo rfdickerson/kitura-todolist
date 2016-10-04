@@ -32,6 +32,10 @@ public class SuperTodoList {
         router.get("/v1/tasks", handler: handleGetTasks)
         router.post("/v1/tasks", handler: handleAddTask)
         
+        addRoutesForStringItems(router: router)
+        addRoutesForDictItems(router: router)
+        addRoutesForStructItems(router: router)
+        
         taskDatabase.addTask(
             TodoListItem: TodoListItem(id: UUID(),
                  description: "Buy candy",
