@@ -1,15 +1,15 @@
 import Foundation
 
-struct TodoListItem {
+struct TodoItem {
 
     let id:       UUID
     let title:    String
     
 }
 
-extension TodoListItem: Equatable { }
+extension TodoItem: Equatable { }
 
-func == (lhs: TodoListItem, rhs: TodoListItem) -> Bool {
+func == (lhs: TodoItem, rhs: TodoItem) -> Bool {
     if  lhs.id          == rhs.id,
         lhs.title       == rhs.title {
         return true
@@ -19,7 +19,7 @@ func == (lhs: TodoListItem, rhs: TodoListItem) -> Bool {
 
 }
 
-extension TodoListItem: JSONConvertible {
+extension TodoItem: JSONConvertible {
     var dictionary: [String: Any] {
         return [
             "id"      : "\(id)",
