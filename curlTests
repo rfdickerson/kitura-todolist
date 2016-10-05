@@ -1,8 +1,13 @@
- curl -H "Content-Type: application/json" -X POST localhost:8090/v1/item_string -d '{"item":"Reticulate Splines"}' localhost/v1/item_string:8090
+curl -H "Content-Type: application/json" -X POST -d '{"item":"Reticulate Splines"}' localhost:8090/v1/item_string
 
 curl localhost:8090/v1/item_string
 
 
-curl -H "Content-Type: application/json" -X POST localhost:8090/v1/item_dictionary -d '{ "item": {"who":"David"}}' localhost/v1/item_dictionary:8090
+curl -H "Content-Type: application/json" -X POST -d '{ "item": {"who":"David"}}' localhost:8090/v1/item_dictionary
 
 curl localhost:8090/v1/item_dictionary
+
+
+curl -H "Content-Type: application/json" -X POST -d '{"title":"frob"}' localhost:8090/v1/item_struct
+
+curl localhost:8090/v1/item_struct

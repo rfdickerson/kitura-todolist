@@ -48,7 +48,7 @@ extension Item {
 func handleGetItemStructs(request: RouterRequest,
                           response: RouterResponse,
                           callNextHandler: @escaping () -> Void) throws {
-    response.send(json: JSON(itemStructs))
+    response.send(json: JSON(itemStructs.map {$0.json}))
     callNextHandler()
 }
 
@@ -70,7 +70,7 @@ func handleAddItemStruct( request: RouterRequest,
         itemStructsLock.wait()
         itemStructs.append(item)
         itemStructsLock.signal()
-        response.send("Added '/(item)'")
+        response.send("Added '\(item)'")
         callNextHandler()
     }
     catch {
