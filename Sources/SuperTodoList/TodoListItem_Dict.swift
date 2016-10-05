@@ -12,6 +12,8 @@ var itemDictionaries: [[String: Any]] = []
 let itemDictionariesLock = DispatchSemaphore(value: 1)
 
 import SwiftyJSON
+
+// curl localhost:8090/v1/item_dictionary
 func handleGetItemDictionaries(request: RouterRequest,
                     response: RouterResponse,
                     callNextHandler: @escaping () -> Void) throws {
@@ -19,7 +21,7 @@ func handleGetItemDictionaries(request: RouterRequest,
     callNextHandler()
 }
 
-
+// curl -H "Content-Type: application/json" -X POST -d '{"title":"Reticulate Splines"}' localhost:8090/v1/item_dictionary
 func handleAddItemDictionary( request: RouterRequest,
                     response: RouterResponse,
                     callNextHandler: @escaping () -> Void ) {
