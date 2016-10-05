@@ -10,32 +10,17 @@ import Foundation
 import Kitura
 import SwiftyJSON
 
-struct Item {
-    let id:       UUID
-    let title:    String
-}
 var itemStructs: [Item] = []
 let itemStructsLock = DispatchSemaphore(value: 1)
 
-enum ItemError: String, Error { case malformedJSON }
-extension Item {
-    init (json: JSON) throws {
-        guard let d = json.dictionary,
-            let title = d["title"]?.string  else {
-            throw ItemError.malformedJSON
-        }
-        self.id = UUID()
-        self.title = title
-    }
-    var json: JSON {
-        return JSON(["id": id.uuidString, "title": title])
-    }
-}
+
+
+
 func handleGetItemStructs(
         request: RouterRequest,
         response: RouterResponse,
         callNextHandler: @escaping () -> Void) throws {
-    response.send(json: JSON(itemStructs.map {$0.json}))
+    response.send(json: JSON(itemStructs.dictionary))
     callNextHandler()
 }
 func handleAddItemStruct(

@@ -12,12 +12,13 @@ let hostname = "http://127.0.0.1:5984"
 let database = "todolist"
 let design = "tododesign"
 
-let url = URL(string: "http://127.0.0.1:5984/todolist/_design/tododesign/_view/all_todos")
+let urlGet = URL(string: "http://127.0.0.1:5984/todolist/_design/tododesign/_view/all_todos")
+let urlAdd = URL(string: "http://127.0.0.1:5984/todolist/")
 
-func getAllItems() -> Promise<[TodoItem]> {
+func getAllItems() -> Promise<[Item]> {
     return firstly {
-        URLSession().dataTaskPromise(with: url!)
-        }.then(on: queue ) { data -> [TodoItem] in
+        URLSession().dataTaskPromise(with: urlGet!)
+        }.then(on: queue ) { data -> [Item] in
             let json = try JSONSerialization.jsonObject(with: data,
                                                         options: [])
             let j = json as? [String: Any]
@@ -26,7 +27,7 @@ func getAllItems() -> Promise<[TodoItem]> {
             return rows!.map { row in
                 let values = row["value"] as! [String]
                 
-                return TodoItem(id: UUID(), title: values[1])
+                return Item(id: UUID(), title: values[1])
             }
     }
 }
@@ -55,17 +56,20 @@ func handleAddCouchDBItem(
     request: RouterRequest,
     response: RouterResponse,
     callNextHandler: @escaping () -> Void ) {
-    // If there is a body, and it holds JSON, store it in jsonBody
+ 
     guard case let .json(jsonBody)? = request.body
         else {
             response.status(.badRequest)
             callNextHandler()
             return
     }
-    let item = jsonBody["item"].stringValue
+    let item = jsonBody["title"].stringValue
+    
     itemStringsLock.wait()
     itemStrings.append(item)
     itemStringsLock.signal()
+    
+    
     response.send("Added '\(item)'\n")
     callNextHandler()
 }

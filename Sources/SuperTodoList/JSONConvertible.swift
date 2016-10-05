@@ -1,8 +1,9 @@
 import Foundation
-
+import SwiftyJSON
 
 protocol JSONConvertible {
     var dictionary: [String: Any] {get}
+    init(json: JSON) throws
 }
 
 extension Array where Element : JSONConvertible {
