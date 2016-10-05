@@ -38,7 +38,7 @@ func handleAddStringItem( request: RouterRequest,
     itemStringsLock.wait()
     itemStrings.append(item)
     itemStringsLock.signal()
-    response.send("Added '/(item)'")
+    response.send("Added '\(item)'")
     callNextHandler()
 }
 

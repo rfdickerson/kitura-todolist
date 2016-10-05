@@ -1,0 +1,8 @@
+ curl -H "Content-Type: application/json" -X POST localhost:8090/v1/item_string -d '{"item":"Reticulate Splines"}' localhost/v1/item_string:8090
+
+curl localhost:8090/v1/item_string
+
+
+curl -H "Content-Type: application/json" -X POST localhost:8090/v1/item_dictionary -d '{ "item": {"who":"David"}}' localhost/v1/item_dictionary:8090
+
+curl localhost:8090/v1/item_dictionary
