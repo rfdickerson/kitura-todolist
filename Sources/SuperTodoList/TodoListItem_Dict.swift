@@ -8,7 +8,7 @@
 import Foundation
 import Kitura
 
-var itemDictionaries: [[String: String]] = []
+var itemDictionaries: [[String: Any]] = []
 let itemDictionariesLock = DispatchSemaphore(value: 1)
 
 import SwiftyJSON
@@ -26,26 +26,21 @@ func handleAddItemDictionary( request: RouterRequest,
     // ... // Authenticate (see below)
     
     // If there is a body, and it holds JSON, store it in jsonBody
-    guard case let .json(jsonBody)? = request.body,
-        let jsonsByString = jsonBody["item"].dictionary  else {
+    guard case let .json(jsonBody)? = request.body
+        else {
             response.status(.badRequest)
             callNextHandler()
             return
     }
-    var item: [String: String] = [:]
-    for (k, v) in jsonsByString {
-        guard let s = v.string  else {
-            response.status(.badRequest)
-            callNextHandler()
-            return
-        }
-        item[k] = s
-    }
-
+    
+    let title = jsonBody["title"].stringValue
+    
     itemDictionariesLock.wait()
-    itemDictionaries.append(item)
+    itemDictionaries.append( [ "id": "\(UUID())",
+                               "title": title ])
+    
     itemDictionariesLock.signal()
-    response.send("Added '\(item)'")
+    response.send("Added '\(title)'")
     callNextHandler()
 }
 
