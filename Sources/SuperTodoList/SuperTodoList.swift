@@ -28,6 +28,10 @@ public class SuperTodoList {
     let queue = DispatchQueue(label: "com.example.todo")
     
     public init() {
+        router.get("/hello") { request, response, callNextHandler in
+            response.status(.OK).send("Hello, World!")
+            callNextHandler()
+        }
         router.all("*", middleware: BodyParser())
         router.get("/v1/tasks", handler: handleGetTasks)
         router.post("/v1/tasks", handler: handleAddTask)
