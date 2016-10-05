@@ -16,14 +16,14 @@
 
 import Foundation
 
-typealias StringValuePair = [String: Any]
+// typealias StringValuePair = [String: Any]
 
 protocol JSONConvertible {
-    var dictionary: StringValuePair {get}
+    var dictionary: [String: Any] {get}
 }
 
 extension Array where Element : JSONConvertible {
-    var stringValuePairs: [StringValuePair] {
-        return self.map { $0.stringValuePairs }
+    var dictionary: [[String: Any]] {
+        return self.map { $0.dictionary }
     }
 }
