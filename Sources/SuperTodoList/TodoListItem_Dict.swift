@@ -26,14 +26,13 @@ func handleAddItemDictionary( request: RouterRequest,
     // ... // Authenticate (see below)
     
     // If there is a body, and it holds JSON, store it in jsonBody
-    guard case let .json(jsonBody)? = request.body
+    guard case let .json(jsonBody)? = request.body,
+        let title = jsonBody["title"].string
         else {
             response.status(.badRequest)
             callNextHandler()
             return
     }
-    
-    let title = jsonBody["title"].stringValue
     
     itemDictionariesLock.wait()
     itemDictionaries.append( [ "id": "\(UUID())",
