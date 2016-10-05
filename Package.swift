@@ -24,6 +24,7 @@ let package = Package(
     ],
     dependencies: [
         .Package(url: "https://github.com/IBM-Swift/Kitura", majorVersion: 1, minor: 0),
-        .Package(url: "https://github.com/IBM-Swift/HeliumLogger", majorVersion: 1, minor: 0)
+        .Package(url: "https://github.com/IBM-Swift/HeliumLogger", majorVersion: 1, minor: 0),
+        .Package(url: "https://github.com/davidungar/miniPromiseKit", majorVersion: 4)
     ]
 )
