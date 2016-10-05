@@ -1,19 +1,16 @@
-//
-//  SuperTodoList
-//
-//  Created by David Ungar on 10/4/16.
-//
-//
-
 import Foundation
 import Kitura
+import SwiftyJSON
 
 var itemDictionaries: [[String: Any]] = []
 let itemDictionariesLock = DispatchSemaphore(value: 1)
 
-import SwiftyJSON
 
-// curl localhost:8090/v1/item_dictionary
+/**
+ Gets all the items that were stored as a Dictionary
+ 
+ curl localhost:8090/v1/item_dictionary
+*/
 func handleGetItemDictionaries(
         request: RouterRequest,
         response: RouterResponse,
@@ -22,7 +19,11 @@ func handleGetItemDictionaries(
     callNextHandler()
 }
 
-// curl -H "Content-Type: application/json" -X POST -d '{"title":"Reticulate Splines"}' localhost:8090/v1/item_dictionary
+/**
+ Adds an item to an array of Dictionary
+
+curl -H "Content-Type: application/json" -X POST -d '{"title":"Reticulate Splines"}' localhost:8090/v1/item_dictionary
+*/
 func handleAddItemDictionary(
         request: RouterRequest,
         response: RouterResponse,

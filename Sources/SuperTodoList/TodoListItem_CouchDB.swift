@@ -1,19 +1,12 @@
-//
-//  TodoListItem_String.swift
-//  SuperTodoList
-//
-//  Created by David Ungar on 10/4/16.
-//
-//
-
 import Foundation
 import Kitura
-
-// var itemStrings: [String] = []
-// let itemStringsLock = DispatchSemaphore(value: 1)
-
-
 import SwiftyJSON
+
+
+/**
+ This example will communicate with a CouchDB database
+ */
+
 func handleGetCouchDBItems(
     request: RouterRequest,
     response: RouterResponse,
