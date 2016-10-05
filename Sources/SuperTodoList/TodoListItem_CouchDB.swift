@@ -15,22 +15,42 @@ let design = "tododesign"
 let urlGet = URL(string: "http://127.0.0.1:5984/todolist/_design/tododesign/_view/all_todos")
 let baseURL = "http://127.0.0.1:5984/todolist/"
 
+enum JSONParsingError: Error { case malformedJSON, missingRows, missingValue }
+
+func dataToItems(data: Data) throws -> [Item] {
+    
+    let json = try JSONSerialization.jsonObject(with: data,
+                                                options: [])
+    guard let j = json as? [String: Any] else {
+        throw JSONParsingError.malformedJSON
+    }
+    
+    guard let rows = j["rows"] as? [[String: Any]] else {
+        throw JSONParsingError.missingRows
+    }
+    
+    return rows.flatMap { row in
+        guard let values = row["value"] as? [String] else {
+            return nil
+        }
+        
+        let uuid = UUID(uuidString: values[0]) ?? UUID()
+        
+        return Item(id: uuid, title: values[1])
+    }
+}
+
 func getAllItems() -> Promise<[Item]> {
     return firstly {
         URLSession().dataTaskPromise(with: urlGet!)
-        }.then(on: queue ) { data -> [Item] in
-            let json = try JSONSerialization.jsonObject(with: data,
-                                                        options: [])
-            let j = json as? [String: Any]
-            let rows = j!["rows"] as? [[String: Any]]
-            
-            return rows!.map { row in
-                let values = row["value"] as! [String]
-                let uuid = UUID(uuidString: values[0]) ?? UUID()
-                
-                return Item(id: uuid, title: values[1])
-            }
     }
+    .then(on: queue) { result in
+        return try dataToItems(data: result)
+        
+    }.catch(on: queue) { error in
+            
+    }
+    
 }
 
 func addItem(item: Item) -> Promise<Item> {
@@ -81,7 +101,6 @@ func handleGetCouchDBItems(
     _ = firstly {
         getAllItems()
     }.then(on: queue) { items in
-        print(items)
         response.send(json: JSON(items.dictionary))
     }.catch(on: queue) { error in
         response.status(.badRequest)
@@ -89,8 +108,6 @@ func handleGetCouchDBItems(
     }.always(on: queue) {
         callNextHandler()
     }
-    
-    
 }
 
 
