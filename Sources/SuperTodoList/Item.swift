@@ -2,10 +2,14 @@ import Foundation
 import SwiftyJSON
 
 struct Item {
-
     let id:       UUID
     let title:    String
-    
+}
+
+extension Item: CustomStringConvertible {
+    var description: String {
+        return title
+    }
 }
 
 extension Item: Equatable { }

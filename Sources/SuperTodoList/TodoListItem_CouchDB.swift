@@ -26,12 +26,24 @@ func getAllItems() -> Promise<[Item]> {
             
             return rows!.map { row in
                 let values = row["value"] as! [String]
+                let uuid = UUID(uuidString: values[0]) ?? UUID()
                 
-                return Item(id: UUID(), title: values[1])
+                return Item(id: uuid, title: values[1])
             }
     }
 }
 
+func addItem(item: Item) -> Promise<Item> {
+    return Promise { fulfill, error in
+        fulfill(item)
+    }
+}
+
+/**
+ Adds an item to an array of Dictionary
+ 
+ curl -H "Content-Type: application/json" -X POST -d '{"title":"Reticulate Splines"}' localhost:8090/v1/item_couch
+ */
 func handleGetCouchDBItems(
     request: RouterRequest,
     response: RouterResponse,
@@ -63,19 +75,23 @@ func handleAddCouchDBItem(
             callNextHandler()
             return
     }
-    let item = jsonBody["title"].stringValue
     
-    itemStringsLock.wait()
-    itemStrings.append(item)
-    itemStringsLock.signal()
+    _ = firstly { (Void) -> Promise<Item> in
+        let item = try Item(json: jsonBody)
+        return addItem(item: item)
+    }.then(on: queue) { item in
+        
+        response.send("Added \(item.title)")
+        
+    }.catch(on: queue) { error in
+        
+    }.always(on: queue) {
+        callNextHandler()
+    }
     
-    
-    response.send("Added '\(item)'\n")
-    callNextHandler()
 }
 
 func addRoutesForCouchDBItems(router: Router) {
-    //    router.all("/*", middleware: BodyParser())
     router.get ("/v1/item_couch", handler: handleGetCouchDBItems)
     router.post("/v1/item_couch", handler: handleAddCouchDBItem)
 }
