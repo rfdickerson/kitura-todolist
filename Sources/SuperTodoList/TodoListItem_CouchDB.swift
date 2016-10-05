@@ -24,9 +24,9 @@ func getAllItems() -> Promise<[TodoItem]> {
             let rows = j!["rows"] as? [[String: Any]]
             
             return rows!.map { row in
-                let values = row["value"] as? [String]
+                let values = row["value"] as! [String]
                 
-                return TodoItem(id: UUID(), title: "stuff")
+                return TodoItem(id: UUID(), title: values[1])
             }
     }
 }
@@ -35,13 +35,12 @@ func handleGetCouchDBItems(
     request: RouterRequest,
     response: RouterResponse,
     callNextHandler: @escaping () -> Void) throws {
-    response.send(json: JSON(itemStrings))
-    callNextHandler()
-    
+ 
     _ = firstly {
         getAllItems()
     }.then(on: queue) { items in
         print(items)
+        response.send(json: JSON(items.dictionary))
     }.catch(on: queue) { error in
         print(error)
     }.always(on: queue) {
