@@ -13,7 +13,7 @@ let database = "todolist"
 let design = "tododesign"
 
 let urlGet = URL(string: "http://127.0.0.1:5984/todolist/_design/tododesign/_view/all_todos")
-let urlAdd = URL(string: "http://127.0.0.1:5984/todolist/")
+let baseURL = "http://127.0.0.1:5984/todolist/"
 
 func getAllItems() -> Promise<[Item]> {
     return firstly {
@@ -34,8 +34,37 @@ func getAllItems() -> Promise<[Item]> {
 }
 
 func addItem(item: Item) -> Promise<Item> {
-    return Promise { fulfill, error in
-        fulfill(item)
+    return Promise { fulfill, reject in
+        
+        let session = URLSession(configuration: .default)
+        
+        let addURL = "\(baseURL)\(item.id.uuidString)"
+        print("Add url is \(addURL)")
+        
+        guard let url = URL(string: addURL) else {
+            reject(ItemError.malformedJSON)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.httpBody = try! JSONSerialization.data(withJSONObject: item.dictionary,
+                                                       options: [] )
+        
+        
+        let dataTask = session.dataTask(with: request) {
+            data, response, error in
+            
+            if let error = error {
+                reject(error)
+            }
+            
+            fulfill(item)
+        }
+        
+        
+        dataTask.resume()
+        
     }
 }
 
@@ -55,9 +84,10 @@ func handleGetCouchDBItems(
         print(items)
         response.send(json: JSON(items.dictionary))
     }.catch(on: queue) { error in
-        print(error)
+        response.status(.badRequest)
+        response.send(error.localizedDescription)
     }.always(on: queue) {
-            callNextHandler()
+        callNextHandler()
     }
     
     
@@ -80,11 +110,10 @@ func handleAddCouchDBItem(
         let item = try Item(json: jsonBody)
         return addItem(item: item)
     }.then(on: queue) { item in
-        
         response.send("Added \(item.title)")
-        
     }.catch(on: queue) { error in
-        
+        response.status(.badRequest)
+        response.send(error.localizedDescription)
     }.always(on: queue) {
         callNextHandler()
     }
