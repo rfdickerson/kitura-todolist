@@ -14,19 +14,19 @@ let itemDictionariesLock = DispatchSemaphore(value: 1)
 import SwiftyJSON
 
 // curl localhost:8090/v1/item_dictionary
-func handleGetItemDictionaries(request: RouterRequest,
-                    response: RouterResponse,
-                    callNextHandler: @escaping () -> Void) throws {
+func handleGetItemDictionaries(
+        request: RouterRequest,
+        response: RouterResponse,
+        callNextHandler: @escaping () -> Void) throws {
     response.send(json: JSON(itemDictionaries))
     callNextHandler()
 }
 
 // curl -H "Content-Type: application/json" -X POST -d '{"title":"Reticulate Splines"}' localhost:8090/v1/item_dictionary
-func handleAddItemDictionary( request: RouterRequest,
-                    response: RouterResponse,
-                    callNextHandler: @escaping () -> Void ) {
-    // ... // Authenticate (see below)
-    
+func handleAddItemDictionary(
+        request: RouterRequest,
+        response: RouterResponse,
+        callNextHandler: @escaping () -> Void ) {
     // If there is a body, and it holds JSON, store it in jsonBody
     guard case let .json(jsonBody)? = request.body,
         let title = jsonBody["title"].string
@@ -37,11 +37,10 @@ func handleAddItemDictionary( request: RouterRequest,
     }
     
     itemDictionariesLock.wait()
-    itemDictionaries.append( [ "id": "\(UUID())",
+    itemDictionaries.append( [ "id": UUID().uuidString,
                                "title": title ])
-    
     itemDictionariesLock.signal()
-    response.send("Added '\(title)'")
+    response.send("Added '\(title)'\n")
     callNextHandler()
 }
 

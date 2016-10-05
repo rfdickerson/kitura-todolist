@@ -14,19 +14,19 @@ let itemStringsLock = DispatchSemaphore(value: 1)
 
 
 import SwiftyJSON
-func handleGetStringItems(request: RouterRequest,
-                    response: RouterResponse,
-                    callNextHandler: @escaping () -> Void) throws {
+func handleGetStringItems(
+        request: RouterRequest,
+        response: RouterResponse,
+        callNextHandler: @escaping () -> Void) throws {
     response.send(json: JSON(itemStrings))
     callNextHandler()
 }
 
 
-func handleAddStringItem( request: RouterRequest,
-                    response: RouterResponse,
-                    callNextHandler: @escaping () -> Void ) {
-    // ... // Authenticate (see below)
-    
+func handleAddStringItem(
+        request: RouterRequest,
+        response: RouterResponse,
+        callNextHandler: @escaping () -> Void ) {
     // If there is a body, and it holds JSON, store it in jsonBody
     guard case let .json(jsonBody)? = request.body
         else {
@@ -38,7 +38,7 @@ func handleAddStringItem( request: RouterRequest,
     itemStringsLock.wait()
     itemStrings.append(item)
     itemStringsLock.signal()
-    response.send("Added '\(item)'")
+    response.send("Added '\(item)'\n")
     callNextHandler()
 }
 

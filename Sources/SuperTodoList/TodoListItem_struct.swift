@@ -10,54 +10,38 @@ import Foundation
 import Kitura
 import SwiftyJSON
 
-private struct Item {
+struct Item {
     let id:       UUID
     let title:    String
 }
-private var itemStructs: [Item] = []
-private let itemStructsLock = DispatchSemaphore(value: 1)
+var itemStructs: [Item] = []
+let itemStructsLock = DispatchSemaphore(value: 1)
 
-
+enum ItemError: String, Error { case malformedJSON }
 extension Item {
     init (json: JSON) throws {
-        enum ItemError: String, Error { case malformedJSON }
         guard let d = json.dictionary,
             let title = d["title"]?.string  else {
             throw ItemError.malformedJSON
         }
-        // If id is in the json, use it, otherwise assign a new one
-        let id: UUID
-        if let idJSON = d["id"] {
-            guard let x = idJSON.string.flatMap(UUID.init(uuidString:))  else {
-                throw ItemError.malformedJSON
-            }
-            id = x
-        }
-        else {
-            id = UUID()
-        }
-        
-        self.id = id
+        self.id = UUID()
         self.title = title
     }
     var json: JSON {
         return JSON(["id": id.uuidString, "title": title])
     }
 }
-
-func handleGetItemStructs(request: RouterRequest,
-                          response: RouterResponse,
-                          callNextHandler: @escaping () -> Void) throws {
+func handleGetItemStructs(
+        request: RouterRequest,
+        response: RouterResponse,
+        callNextHandler: @escaping () -> Void) throws {
     response.send(json: JSON(itemStructs.map {$0.json}))
     callNextHandler()
 }
-
-
-func handleAddItemStruct( request: RouterRequest,
-                            response: RouterResponse,
-                            callNextHandler: @escaping () -> Void ) {
-    // ... // Authenticate (see below)
-    
+func handleAddItemStruct(
+        request: RouterRequest,
+        response: RouterResponse,
+        callNextHandler: @escaping () -> Void ) {
     // If there is a body, and it holds JSON, store it in jsonBody
     guard case let .json(jsonBody)? = request.body
         else {
@@ -70,7 +54,7 @@ func handleAddItemStruct( request: RouterRequest,
         itemStructsLock.wait()
         itemStructs.append(item)
         itemStructsLock.signal()
-        response.send("Added '\(item)'")
+        response.send("Added '\(item)'\n")
         callNextHandler()
     }
     catch {
