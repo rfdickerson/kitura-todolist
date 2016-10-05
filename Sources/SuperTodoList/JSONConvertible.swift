@@ -18,11 +18,11 @@ import Foundation
 
 typealias StringValuePair = [String: Any]
 
-protocol StringValuePairConvertible {
-    var stringValuePairs: StringValuePair {get}
+protocol JSONConvertible {
+    var dictionary: StringValuePair {get}
 }
 
-extension Array where Element : StringValuePairConvertible {
+extension Array where Element : JSONConvertible {
     var stringValuePairs: [StringValuePair] {
         return self.map { $0.stringValuePairs }
     }

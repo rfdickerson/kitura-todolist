@@ -33,74 +33,16 @@ public class SuperTodoList {
             callNextHandler()
         }
         router.all("*", middleware: BodyParser())
-        router.get("/v1/tasks", handler: handleGetTasks)
-        router.post("/v1/tasks", handler: handleAddTask)
-        
+
         addRoutesForStringItems(router: router)
         addRoutesForDictItems(router: router)
         addRoutesForStructItems(router: router)
+        addRoutesForCouchDBItems(router: router)
         
-        taskDatabase.addTask(
-            TodoListItem: TodoListItem(id: UUID(),
-                 description: "Buy candy",
-                 createdAt: Date(),
-                 isCompleted: false)
-        ) { _ in}
     }
     
 }
 
-
-extension SuperTodoList {
-    
-    func handleGetTasks(request: RouterRequest,
-                        response: RouterResponse,
-                        next: @escaping() -> Void) throws
-    {
-        
-        Log.info("Hello!")
-        
-        taskDatabase.getAllTasks { tasks in
-        response.status(.OK).send(json: JSON(tasks.stringValuePairs))
-        next()
-        
-        }
-    }
-    
-    func handleAddTask(request: RouterRequest,
-                       response: RouterResponse,
-                       next: @escaping() -> Void) throws
-    {
-     
-        guard let json = request.json else {
-            response.status(.badRequest)
-            next()
-            return
-        }
-        
-        let description = json["description"].stringValue
-        
-        
-        let newTask = TodoListItem(id: UUID(), description: description, createdAt: Date(), isCompleted: false)
-        
-        queue.sync {
-            
-            taskDatabase.addTask(TodoListItem: newTask) { TodoListItem in
-                
-                Log.info("Adding a TodoListItem!")
-                
-                response.status(.OK).send("Added a TodoListItem")
-                next()
-            }
-            
-            
-        }
-        
-        
-    }
-    
-    
-}
 
 
 

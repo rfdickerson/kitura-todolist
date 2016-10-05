@@ -19,9 +19,7 @@ import Foundation
 struct TodoListItem {
 
     let id:             UUID
-    let description:    String
-    let createdAt:      Date
-    let isCompleted:    Bool
+    let title:    String
     
 }
 
@@ -29,9 +27,7 @@ extension TodoListItem: Equatable { }
 
 func == (lhs: TodoListItem, rhs: TodoListItem) -> Bool {
     if  lhs.id          == rhs.id,
-        lhs.description == rhs.description,
-        lhs.createdAt   == rhs.createdAt,
-        lhs.isCompleted == rhs.isCompleted {
+        lhs.title       == rhs.title {
         return true
     }
     
@@ -39,13 +35,11 @@ func == (lhs: TodoListItem, rhs: TodoListItem) -> Bool {
 
 }
 
-extension TodoListItem: StringValuePairConvertible {
-    var stringValuePairs: StringValuePair {
+extension TodoListItem: JSONConvertible {
+    var dictionary: [String: Any] {
         return [
-            "id"            :   "\(self.id)",
-            "description"   : self.description,
-            "createdAt"     : self.createdAt.timeIntervalSinceReferenceDate,
-            "isCompleted"   : self.isCompleted
+            "id"      :   "\(self.id)",
+            "title"   : self.title,
         ]
     }
 }
