@@ -47,10 +47,7 @@ func getAllItems() -> Promise<[Item]> {
     .then(on: queue) { result in
         return try dataToItems(data: result)
         
-    }.catch(on: queue) { error in
-            
     }
-    
 }
 
 func addItem(item: Item) -> Promise<Item> {
@@ -68,7 +65,7 @@ func addItem(item: Item) -> Promise<Item> {
         
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
-        request.httpBody = try! JSONSerialization.data(withJSONObject: item.dictionary,
+        request.httpBody = try JSONSerialization.data(withJSONObject: item.dictionary,
                                                        options: [] )
         
         
@@ -116,14 +113,11 @@ func handleAddCouchDBItem(
     response: RouterResponse,
     callNextHandler: @escaping () -> Void ) {
  
-    guard case let .json(jsonBody)? = request.body
-        else {
-            response.status(.badRequest)
-            callNextHandler()
-            return
-    }
-    
     _ = firstly { (Void) -> Promise<Item> in
+        guard case let .json(jsonBody)? = request.body
+            else {
+                throw JSONParsingError.malformedJSON
+        }
         let item = try Item(json: jsonBody)
         return addItem(item: item)
     }.then(on: queue) { item in
